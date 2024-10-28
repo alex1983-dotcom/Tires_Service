@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category.name }}</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            line-height: 1.0;
+            background-image: url('/media/колесо.jpg'); /* Замените на путь к вашему изображению */
+            background-size: cover; /* Устанавливает изображение на весь экран */
+            color: white; /* Устанавливает белый цвет текста */
+            margin: 0; /* Убирает отступы по краям */
+        }
+        .container {
+            display: flex;
+        }
+        h1, h2, h3 {
+            line-height: 1.0;
+        }
+        p {
+            line-height: 1.0;
+            font-size: 18px;
+        }
+        ul, ol {
+            margin: 0.5em 0 0.5em 2em;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        code {
+            background-color: #f8f8f8;
+            border: 1px solid #e1e1e1;
+            padding: 2px 4px;
+            font-size: 90%;
+        }
+        .sidebar {
+            position: fixed; /* Фиксирует боковую панель на экране */
+            left: 0; /* Выравнивает боковую панель по левому краю */
+            top: 0; /* Выравнивает боковую панель по верхнему краю */
+            width: 25%; /* Устанавливает ширину боковой панели */
+            height: 100%; /* Устанавливает высоту боковой панели на весь экран */
+            padding-right: 10px; /* Устанавливает внутренний отступ справа для боковой панели */
+            padding-left: 10px;
+            border-right: 1px solid #ccc; /* Устанавливает правую границу для боковой панели */
+            background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный темный фон */
+            color: white; /* Устанавливает белый цвет текста на боковой панели */
+            overflow: auto; /* Позволяет прокрутку содержимого боковой панели */
+        }
+        .sidebar a {
+            color: white; /* Устанавливает белый цвет для ссылок в боковой панели */
+            text-decoration: none; /* Убирает подчеркивание для ссылок */
+        }
+        .sidebar a:hover {
+            text-decoration: underline; /* Подчеркивает ссылки при наведении */
+        }
+        .content {
+            width: 75%;
+            padding-left: 60px;
+        }
+        .logo {
+            width: 50%;
+            height: auto;
+            border-radius: 50%; /* Делает изображение круглым */
+            object-fit: cover; /* Обрезает изображение по границам контейнера */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h1>{{ category.name }}</h1>
+        <a href="{% url 'home_page' %}">Назад на главную</a>
+        <ul>
+            {% for article in articles %}
+                <li><a href="{% url 'dynamic_article_detail' article.id %}">{{ article.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ article.title }}</title>
+    <style>
+        .container {
+            display: flex;
+            font-size: 20px;
+        }
+        p {
+            line-height: 1.5; /* Устанавливает межстрочный интервал для абзацев */
+            font-size: 20px; /* Устанавливает размер шрифта для абзацев */
+        }
+        .main-content {
+            flex: 3;
+        }
+        .sidebar {
+            flex: 1;
+            border-left: 1px solid #ccc;
+            padding-left: 10px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 10px;
+
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: black;
+
+        }
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <h1>{{ article.title }}</h1>
+            <div>{{ article_content_html|safe }}</div>
+        </div>
+        <div class="sidebar">
+            <h2>Рубрики</h2>
+            <a href="{% url 'home_page' %}">Назад на главную</a>
+            <ul>
+                {% for category in categories %}
+                    <li><a href="{% url 'category_articles' category.id %}">{{ category.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
