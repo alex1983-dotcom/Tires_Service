@@ -43,6 +43,8 @@
         <div class="main-content">
             <h1>{{ article.title }}</h1>
             <div>{{ article_content_html|safe }}</div>
+            <p>Автор: {{ article.author }}</p>
+            <p>Дата создания: {{ article.created_at|date:"d M Y" }}</p>
         </div>
         <div class="sidebar">
             <h2>Рубрики</h2>
