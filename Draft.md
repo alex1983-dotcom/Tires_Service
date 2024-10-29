@@ -104,8 +104,11 @@ from .views import register
 urlpatterns = [
     path('register/', register, name='register'),
 ]
+```
+
 Включите URL-шаблоны нового приложения в основной конфигурации URL проекта:
 
+```
 urlpatterns = [
     ...,
     path('user/', include('user_registration.urls')),
