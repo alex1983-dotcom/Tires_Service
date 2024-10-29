@@ -121,8 +121,8 @@ urlpatterns = [
 
 
 ### Шаг 9: Админка для управления скидками
-Для управления скидками добавьте новую модель для обработки скидок в 
-`user_registration/models.py`:
+Для управления скидками добавляем новую модель для обработки 
+скидок в `user_registration/models.py`:
 
 ```
 class Discount(models.Model):
@@ -134,7 +134,7 @@ class Discount(models.Model):
         return self.total_spent * (self.discount_rate / 100)
 ```
 
-И зарегистрируйте модель в `admin.py`:
+Рарегистрируйте модель в `admin.py`:
 
 ```
 from django.contrib import admin
