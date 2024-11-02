@@ -138,3 +138,8 @@ CACHES = {
         'LOCATION': 'unique-snowflake',
     }
 }
+LOGIN_REDIRECT_URL = 'home_page'
+LOGOUT_REDIRECT_URL = 'login'
+
+AUTH_USER_MODEL = 'user_registration.User'
+
