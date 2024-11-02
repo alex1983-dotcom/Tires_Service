@@ -10,7 +10,7 @@ class DiscountAdmin(admin.ModelAdmin):
     list_filter = ('user', 'total_spent')
 
     def calculate_discount(self, obj):
-        return f"{obj.calculate_discount()}%"
+        return f"%{obj.calculate_discount()}%"
 
     calculate_discount.short_description = 'Процент скидки'
 

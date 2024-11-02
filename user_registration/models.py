@@ -42,6 +42,6 @@ class Discount(models.Model):
     def __str__(self):
         return f"Скидка для {self.user.username}: {self.calculate_discount()}%"
 
-# Пример использования:
-discount = Discount(total_spent=1000)
-print(discount.calculate_discount())  # Вывод: 150.0 (процент скидки)
+# # Пример использования:
+# discount = Discount(total_spent=1000)
+# print(discount.calculate_discount())  # Вывод: 150.0 (процент скидки)
