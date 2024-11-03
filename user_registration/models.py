@@ -1,8 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
-from django.apps import AppConfig
 
 class UserManager(BaseUserManager):
+    """
+    Класс менеджера для пользователей, который обеспечивает создание
+    обычных пользователей и суперпользователей.
+    """
     def create_user(self, email, username, password=None):
         if not email:
             raise ValueError('Пользователи должны иметь email адрес')
@@ -11,7 +14,7 @@ class UserManager(BaseUserManager):
             username=username,
         )
         user.set_password(password)
-        user.save(using=self._db)  # Здесь исправляем
+        user.save(using=self._db)
         return user
 
     def create_superuser(self, email, username, password=None):
@@ -22,10 +25,14 @@ class UserManager(BaseUserManager):
         )
         user.is_admin = True
         user.is_staff = True
-        user.save(using=self._db)  # И здесь тоже исправляем
+        user.save(using=self._db)
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    Класс модели пользователя, который расширяет AbstractBaseUser и PermissionsMixin.
+    Содержит поля для фамилии, имени, отчества, email, имени пользователя и другие необходимые поля.
+    """
     last_name = models.CharField(max_length=50)
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True)
@@ -46,16 +53,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.last_name} {self.first_name} ({self.email})"
 
 class Discount(models.Model):
+    """
+    Класс модели скидок, который хранит информацию о накопленных бонусах и проценте скидки.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    total_spent = models.DecimalField(max_digits=10, decimal_places=2)  # Накопленные бонусы
-    discount_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0.15)  # Процент скидки за 1 бонусный балл
+    total_spent = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0.15)
 
     def calculate_discount(self):
         """
         Рассчитывает процент скидки на основе накопленных бонусов.
         """
-        bonus_discount = self.total_spent * self.discount_rate  # 1 бонусный балл = 0.15%
-        return bonus_discount  # Возвращаем процент скидки
+        bonus_discount = self.total_spent * self.discount_rate
+        return bonus_discount
 
     def update_total_spent(self, amount):
         """
@@ -70,6 +80,3 @@ class Discount(models.Model):
 
     def __str__(self):
         return f"Скидка для {self.user.username}: {self.calculate_discount()}%"
-
-
-

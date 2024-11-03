@@ -5,15 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="31bc848b-3817-437b-812b-48fa02541928" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/user_registration/signals.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProffShina/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProffShina/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProffShina/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProffShina/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_registration/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_registration/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/apps.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user_registration/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_registration/templates/user_registration/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/templates/user_registration/register.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +42,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "Python.python manage.py startapp user_registration.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "version__1.0",
     "last_opened_file_path": "D:/DjangoPro/ProffShina/ProffShina/media",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
