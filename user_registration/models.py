@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
+from django.apps import AppConfig
 
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
@@ -69,3 +70,6 @@ class Discount(models.Model):
 
     def __str__(self):
         return f"Скидка для {self.user.username}: {self.calculate_discount()}%"
+
+
+

@@ -143,3 +143,27 @@ LOGOUT_REDIRECT_URL = 'login'
 
 AUTH_USER_MODEL = 'user_registration.User'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'alebarda2018@gmail.com'
+EMAIL_HOST_PASSWORD = 'myanna_777_cng'
+
+
