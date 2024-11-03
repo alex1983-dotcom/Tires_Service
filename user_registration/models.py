@@ -1,3 +1,4 @@
+# models.py
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 
@@ -80,3 +81,44 @@ class Discount(models.Model):
 
     def __str__(self):
         return f"Скидка для {self.user.username}: {self.calculate_discount()}%"
+
+class TireStorage(models.Model):
+    """
+    Класс модели для хранения информации о шинах.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    entry_date = models.DateField()
+    exit_date = models.DateField(null=True, blank=True)
+    daily_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0.15)
+
+    def calculate_storage_cost(self):
+        """
+        Рассчитывает стоимость хранения шины исходя из цены хранения в сутки.
+        """
+        from datetime import date
+        days_stored = (self.exit_date or date.today()) - self.entry_date
+        return days_stored.days * self.daily_rate
+
+    class Meta:
+        verbose_name = "Хранение шины"
+        verbose_name_plural = "Хранение шин"
+
+    def __str__(self):
+        return f"Хранение шины для {self.user.username}: {self.calculate_storage_cost()}р"
+
+class ServiceAppointment(models.Model):
+    """
+    Класс модели для записи клиентов на обслуживание.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    car_model = models.CharField(max_length=50)
+    service_date = models.DateField()
+    service_time = models.TimeField()
+    additional_info = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Запись на обслуживание"
+        verbose_name_plural = "Записи на обслуживание"
+
+    def __str__(self):
+        return f"Запись на {self.service_date} {self.service_time} для {self.user.username}"

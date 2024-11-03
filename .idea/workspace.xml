@@ -5,8 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="31bc848b-3817-437b-812b-48fa02541928" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/user_registration/templates/user_registration/book_service.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user_registration/templates/user_registration/personal_cabinet.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_registration/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_registration/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/apps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_registration/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user_registration/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_registration/templates/user_registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/templates/user_registration/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_registration/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_registration/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +25,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -37,16 +46,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Python.python manage.py startapp user_registration.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "version__1.0",
-    "last_opened_file_path": "D:/DjangoPro/ProffShina/ProffShina/media",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.python manage.py startapp user_registration.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;version__1.0&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/DjangoPro/ProffShina/ProffShina/media&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\DjangoPro\ProffShina\ProffShina\media" />

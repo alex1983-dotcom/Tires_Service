@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/media/background.jpg');
+            background-size: cover;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 600px;
+        }
+        h2, h3 {
+            text-align: center;
+        }
+        p {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: rgba(255, 255, 255, 0.2);
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button {
+            background: black;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: darkgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Личный кабинет</h2>
+        <p>Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!</p>
+        <p>Текущая скидка: {{ discount.calculate_discount }}%</p>
+
+        <h3>Информация о хранении шин</h3>
+        <ul>
+            {% for storage in tire_storages %}
+                <li>Дата поступления: {{ storage.entry_date }} - Дата выдачи: {{ storage.exit_date }} - Стоимость хранения: {{ storage.calculate_storage_cost }}р</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

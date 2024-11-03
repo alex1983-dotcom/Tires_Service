@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Вход</title>
+    <title>Запись на обслуживание</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('/media/шины.jpg');
+            background-image: url('/media/background.jpg');
             background-size: cover;
             color: white;
             display: flex;
@@ -29,7 +29,7 @@
             flex-direction: column;
             gap: 10px;
         }
-        input[type="text"], input[type="password"] {
+        input[type="text"], input[type="date"], input[type="time"], textarea {
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid white;
             padding: 10px;
@@ -52,11 +52,22 @@
 </head>
 <body>
     <div class="form-container">
-        <h2>Вход</h2>
+        <h2>Запись на обслуживание</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Войти</button>
+            <label for="car_model">Модель автомобиля:</label>
+            <input type="text" id="car_model" name="car_model" required>
+
+            <label for="service_date">Дата обслуживания:</label>
+            <input type="date" id="service_date" name="service_date" required>
+
+            <label for="service_time">Время обслуживания:</label>
+            <input type="time" id="service_time" name="service_time" required>
+
+            <label for="additional_info">Дополнительная информация:</label>
+            <textarea id="additional_info" name="additional_info" rows="4"></textarea>
+
+            <button type="submit">Записаться</button>
         </form>
     </div>
 </body>
