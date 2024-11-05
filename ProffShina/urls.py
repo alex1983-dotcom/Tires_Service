@@ -20,6 +20,7 @@ from django.contrib.auth import views as auth_views
 from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('content/', include('content.urls')),  # Убедитесь, что это путь к вашему приложению с главной страницей
@@ -27,7 +28,9 @@ urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     path('login/', auth_views.LoginView.as_view(template_name='user_registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
-    path('', include('content.urls')),  # Добавьте этот путь для главной страницы
+    path('', include('content.urls')),  # Главная страница
+    path('api/', include('user_registration.urls_api')),  # Маршруты API
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -3,6 +3,17 @@ from django.contrib.auth import login, authenticate
 from .forms import UserRegistrationForm
 from .models import Discount, TireStorage
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+def send_welcome_email(user_email):
+    subject = 'Добро пожаловать на ProffShina!'
+    message = 'Спасибо за регистрацию на нашем сайте!'
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [user_email]
+    send_mail(subject, message, from_email, recipient_list)
+
 
 def register(request):
     """
@@ -22,6 +33,7 @@ def register(request):
         form = UserRegistrationForm()
     return render(request, 'user_registration/register.html', {'form': form})
 
+
 def personal_cabinet(request):
     """
     Представление для личного кабинета пользователя.
@@ -34,6 +46,7 @@ def personal_cabinet(request):
         'discount': discount,
         'tire_storages': tire_storages
     })
+
 
 def book_service(request):
     """
