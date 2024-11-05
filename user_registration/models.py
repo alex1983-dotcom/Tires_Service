@@ -52,6 +52,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.last_name} {self.first_name} ({self.email})"
 
+    def get_full_name(self):
+        """
+        Возвращает полное имя пользователя.
+        """
+        return f"{self.first_name} {self.last_name}"
+
+    def get_short_name(self):
+        """
+        Возвращает краткое имя пользователя.
+        """
+        return self.first_name
+
 class Discount(models.Model):
     """
     Класс модели скидок, который хранит информацию о накопленных бонусах и проценте скидки.

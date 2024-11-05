@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('/media/шины.jpg');
+            background-image: url('/media/колесо.jpg');
             background-size: cover;
             color: white;
             display: flex;
@@ -16,7 +16,7 @@
             margin: 0;
         }
         .form-container {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -29,7 +29,7 @@
             flex-direction: column;
             gap: 10px;
         }
-        input[type="text"], input[type="password"] {
+        input[type="email"], input[type="password"] {
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid white;
             padding: 10px;
@@ -55,9 +55,21 @@
         <h2>Вход</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+
             <button type="submit">Войти</button>
         </form>
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
