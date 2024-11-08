@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('/media/background.jpg');
+            background-image: url('/media/колесо.jpg');
             background-size: cover;
             color: white;
             display: flex;
@@ -40,14 +40,6 @@
             padding: 10px;
             border-radius: 5px;
         }
-        a {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
         .logout {
             background: red;
             color: white;
@@ -70,10 +62,14 @@
                 <li>Дата поступления: {{ storage.entry_date }} - Дата выдачи: {{ storage.exit_date }} - Стоимость хранения: {{ storage.calculate_storage_cost }}р</li>
             {% endfor %}
         </ul>
-        <!-- Добавим ссылку для выхода из системы -->
+        <!-- Используем метод POST для выхода -->
         <div class="logout">
-            <a href="{% url 'logout' %}">Выйти из системы</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" style="background:none; border:none; color:white; font-size:16px; cursor:pointer;">Выйти из системы</button>
+            </form>
         </div>
     </div>
 </body>
 </html>
+
