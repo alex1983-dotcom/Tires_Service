@@ -54,7 +54,17 @@
         <h2>Регистрация пользователя</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form.last_name.label_tag }} {{ form.last_name }}
+            {{ form.first_name.label_tag }} {{ form.first_name }}
+            {{ form.middle_name.label_tag }} {{ form.middle_name }}
+            {{ form.email.label_tag }} {{ form.email }}
+            <div class="form-group">
+                <label for="phone_number">Номер телефона:</label>
+                <input type="text" name="phone_number" id="phone_number" required>
+            </div>
+            {{ form.username.label_tag }} {{ form.username }}
+            {{ form.password1.label_tag }} {{ form.password1 }}
+            {{ form.password2.label_tag }} {{ form.password2 }}
             <button type="submit">Зарегистрироваться</button>
         </form>
     </div>
