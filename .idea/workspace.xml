@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31bc848b-3817-437b-812b-48fa02541928" name="Changes" comment="Изменения сохранены">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProffShina/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProffShina/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/templates/content/home_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/content/templates/content/home_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/content/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-    </list>
+    <list default="true" id="31bc848b-3817-437b-812b-48fa02541928" name="Changes" comment="Изменения сохранены" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
