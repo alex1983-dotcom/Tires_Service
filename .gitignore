@@ -8,6 +8,35 @@
 __pycache__/
 *.pyc
 
-*.pyc
-__pycache__/
+# SQLite database
 db.sqlite3
+db.sqlite3-journal
+
+# Игнорировать виртуальные среды
+env/
+venv/
+.env/
+myenv/
+
+# VS Code
+.vscode/
+
+# Логи
+*.log
+
+# Временные файлы
+*.tmp
+*.bak
+
+# Django configuration
+*.env
+.env
+.env.*
+
+# Сборки и зависимости
+build/
+dist/
+
+# Результаты тестов и покрытия
+.coverage
+htmlcov/
