@@ -6,16 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="31bc848b-3817-437b-812b-48fa02541928" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProffShina/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProffShina/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProffShina/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ProffShina/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_registration/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_registration/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_registration/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_registration/templates/user_registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/templates/user_registration/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_registration/templates/user_registration/personal_cabinet.html" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/templates/user_registration/personal_cabinet.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_registration/templates/user_registration/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/templates/user_registration/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/content/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/content/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +25,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="version_2.0" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
