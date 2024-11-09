@@ -4,9 +4,12 @@ from .models import DynamicArticle, HomePage
 import markdown
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
+from django.conf import settings
+
 
 def markdown_to_html(text):
     return markdown.markdown(text)
+
 
 class HomePageView(View):
     """
@@ -22,7 +25,8 @@ class HomePageView(View):
         context = {
             'home_page': home_page,
             'categories': categories_with_ids,
-            'image_url': '/media/шины.jpg'
+            'image_url': '/media/шины.jpg',
+            'MEDIA_URL': settings.MEDIA_URL  # Передаем MEDIA_URL в контекст
         }
         return render(request, 'content/home_page.html', context)
 
