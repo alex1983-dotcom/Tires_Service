@@ -10,6 +10,7 @@ from django.conf import settings
 def markdown_to_html(text):
     return markdown.markdown(text)
 
+
 class HomePageView(View):
     """
     Этот контроллер отвечает за отображение главной страницы.
