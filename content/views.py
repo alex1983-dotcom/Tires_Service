@@ -25,7 +25,7 @@ class HomePageView(View):
         context = {
             'home_page': home_page,
             'categories': categories_with_ids,
-            'MEDIA_URL': settings.MEDIA_URL  # Передаем MEDIA_URL в контекст
+            'MEDIA_URL': settings.MEDIA_URL
         }
         return render(request, 'content/home_page.html', context)
 
