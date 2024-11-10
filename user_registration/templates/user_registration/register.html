@@ -48,6 +48,8 @@
             background: darkgray;
         }
     </style>
+    <!-- Добавь SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
 </head>
 <body>
     <div class="form-container">
@@ -68,5 +70,19 @@
             <button type="submit">Зарегистрироваться</button>
         </form>
     </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.all.min.js"></script>
+    <!-- Скрипт для отображения оповещений -->
+    <script>
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    icon: '{{ message.tags }}',
+                    title: '{{ message }}'
+                });
+            {% endfor %}
+        {% endif %}
+    </script>
 </body>
 </html>
