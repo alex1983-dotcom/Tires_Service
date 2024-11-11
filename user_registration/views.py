@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
-from .forms import UserRegistrationForm
-from .models import Discount, TireStorage, ServiceAppointment
+from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from django.views import View
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .forms import UserRegistrationForm
+from .models import Discount, TireStorage, ServiceAppointment, User
+from .serializers import UserSerializer
 
 
 def send_welcome_email(user_email):
@@ -15,16 +20,12 @@ def send_welcome_email(user_email):
     send_mail(subject, message, from_email, recipient_list)
 
 
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
-from .forms import UserRegistrationForm
+class RegisterView(View):
+    def get(self, request):
+        form = UserRegistrationForm()
+        return render(request, 'user_registration/register.html', {'form': form})
 
-def register(request):
-    """
-    Представление для регистрации пользователей.
-    """
-    if request.method == 'POST':
+    def post(self, request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             try:
@@ -43,13 +44,14 @@ def register(request):
                 messages.error(request, f"Ошибка при регистрации: {str(e)}")
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'user_registration/register.html', {'form': form})
+        return render(request, 'user_registration/register.html', {'form': form})
 
 
-def login_view(request):
-    if request.method == 'POST':
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'user_registration/login.html')
+
+    def post(self, request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, username=email, password=password)
@@ -58,32 +60,29 @@ def login_view(request):
             return redirect('personal_cabinet')
         else:
             messages.error(request, 'Неверный email или пароль')
-    return render(request, 'user_registration/login.html')
+        return render(request, 'user_registration/login.html')
 
 
-def personal_cabinet(request):
-    """
-    Представление для личного кабинета пользователя.
-    Отображает текущую скидку и информацию о хранении шин.
-    """
-    user = request.user
-    try:
-        discount = Discount.objects.get(user=user)
-    except Discount.DoesNotExist:
-        discount = None
+class PersonalCabinetView(View):
+    def get(self, request):
+        user = request.user
+        try:
+            discount = Discount.objects.get(user=user)
+        except Discount.DoesNotExist:
+            discount = None
 
-    tire_storages = TireStorage.objects.filter(user=user)
-    return render(request, 'user_registration/personal_cabinet.html', {
-        'discount': discount,
-        'tire_storages': tire_storages
-    })
+        tire_storages = TireStorage.objects.filter(user=user)
+        return render(request, 'user_registration/personal_cabinet.html', {
+            'discount': discount,
+            'tire_storages': tire_storages
+        })
 
 
-def book_service(request):
-    """
-    Представление для записи автомобиля на обслуживание.
-    """
-    if request.method == 'POST':
+class BookServiceView(View):
+    def get(self, request):
+        return render(request, 'user_registration/book_service.html')
+
+    def post(self, request):
         car_model = request.POST['car_model']
         service_date = request.POST['service_date']
         service_time = request.POST['service_time']
@@ -93,4 +92,76 @@ def book_service(request):
 
         messages.success(request, 'Вы успешно записались на обслуживание!')
         return redirect('personal_cabinet')
-    return render(request, 'user_registration/book_service.html')
+
+
+class ServiceAppointmentListView(APIView):
+    def get(self, request):
+        appointments = ServiceAppointment.objects.all()
+        appointments_data = [{'user': appointment.user.username,
+                              'car_model': appointment.car_model,
+                              'service_date': appointment.service_date,
+                              'service_time': appointment.service_time,
+                              'additional_info': appointment.additional_info} for appointment in appointments]
+        return Response(appointments_data)
+
+    def post(self, request):
+        user = request.user
+        car_model = request.data.get('car_model')
+        service_date = request.data.get('service_date')
+        service_time = request.data.get('service_time')
+        additional_info = request.data.get('additional_info', '')
+
+        appointment = ServiceAppointment(user=user, car_model=car_model,
+                                         service_date=service_date, service_time=service_time,
+                                         additional_info=additional_info)
+        appointment.save()
+        return Response({'status': 'Запись создана'}, status=status.HTTP_201_CREATED)
+
+
+class ServiceAppointmentDetailView(APIView):
+    def get(self, request, pk):
+        try:
+            appointment = ServiceAppointment.objects.get(pk=pk)
+            appointment_data = {'user': appointment.user.username,
+                                'car_model': appointment.car_model,
+                                'service_date': appointment.service_date,
+                                'service_time': appointment.service_time,
+                                'additional_info': appointment.additional_info}
+            return Response(appointment_data)
+        except ServiceAppointment.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            appointment = ServiceAppointment.objects.get(pk=pk)
+            appointment.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ServiceAppointment.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class UserListView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+
+class UserDetailView(APIView):
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

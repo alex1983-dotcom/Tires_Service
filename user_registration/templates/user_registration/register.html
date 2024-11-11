@@ -54,7 +54,7 @@
 <body>
     <div class="form-container">
         <h2>Регистрация пользователя</h2>
-        <form method="post">
+        <form method="post" autocomplete="off">
             {% csrf_token %}
             {{ form.last_name.label_tag }} {{ form.last_name }}
             {{ form.first_name.label_tag }} {{ form.first_name }}

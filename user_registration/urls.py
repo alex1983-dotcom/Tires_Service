@@ -1,14 +1,17 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
-from .views import register, personal_cabinet, book_service, login_view
+from .views import RegisterView, LoginView, PersonalCabinetView, BookServiceView, ServiceAppointmentListView, ServiceAppointmentDetailView, UserListView, UserDetailView
 
 urlpatterns = [
-    path('register/', register, name='register'),
-    path('login/', login_view, name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
-    path('personal_cabinet/', personal_cabinet, name='personal_cabinet'),
-    path('book_service/', book_service, name='book_service'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('personal_cabinet/', PersonalCabinetView.as_view(), name='personal_cabinet'),
+    path('book_service/', BookServiceView.as_view(), name='book_service'),
+    path('appointments/', ServiceAppointmentListView.as_view(), name='appointment-list'),
+    path('appointments/<int:pk>/', ServiceAppointmentDetailView.as_view(), name='appointment-detail'),
+    path('users/', UserListView.as_view(), name='user-list'),
+    path('users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
 ]
+
 
 
 
