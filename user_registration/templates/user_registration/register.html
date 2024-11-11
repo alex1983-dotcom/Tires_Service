@@ -54,7 +54,7 @@
 <body>
     <div class="form-container">
         <h2>Регистрация пользователя</h2>
-        <form method="post" autocomplete="off">
+        <form id="registration-form" method="post" autocomplete="off">
             {% csrf_token %}
             {{ form.last_name.label_tag }} {{ form.last_name }}
             {{ form.first_name.label_tag }} {{ form.first_name }}
@@ -71,18 +71,37 @@
         </form>
     </div>
 
-    <!-- SweetAlert2 JS -->
+    <!-- SweetAlert2 JS и jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.all.min.js"></script>
-    <!-- Скрипт для отображения оповещений -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Скрипт для обработки формы -->
     <script>
-        {% if messages %}
-            {% for message in messages %}
-                Swal.fire({
-                    icon: '{{ message.tags }}',
-                    title: '{{ message }}'
-                });
-            {% endfor %}
-        {% endif %}
+        $('#registration-form').on('submit', function(event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "register" %}',
+                data: $(this).serialize(),
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Регистрация прошла успешно!',
+                        showConfirmButton: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '{% url "personal_cabinet" %}';
+                        }
+                    });
+                },
+                error: function(response) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Ошибка регистрации',
+                        text: response.responseJSON.message
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>

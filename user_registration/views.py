@@ -73,6 +73,7 @@ class PersonalCabinetView(View):
 
         tire_storages = TireStorage.objects.filter(user=user)
         return render(request, 'user_registration/personal_cabinet.html', {
+            'user': user,
             'discount': discount,
             'tire_storages': tire_storages
         })

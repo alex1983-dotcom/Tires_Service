@@ -54,15 +54,17 @@
     <div class="container">
         <h2>Личный кабинет</h2>
         <p>Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!</p>
-        <p>Текущая скидка: {{ discount.calculate_discount }}%</p>
-
+        {% if discount %}
+            <p>Текущая скидка: {{ discount.calculate_discount }}%</p>
+        {% else %}
+            <p>У вас нет доступных скидок.</p>
+        {% endif %}
         <h3>Информация о хранении шин</h3>
         <ul>
             {% for storage in tire_storages %}
                 <li>Дата поступления: {{ storage.entry_date }} - Дата выдачи: {{ storage.exit_date }} - Стоимость хранения: {{ storage.calculate_storage_cost }}р</li>
             {% endfor %}
         </ul>
-        <!-- Используем метод POST для выхода -->
         <div class="logout">
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
@@ -72,4 +74,3 @@
     </div>
 </body>
 </html>
-
