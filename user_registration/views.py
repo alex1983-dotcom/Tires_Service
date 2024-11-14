@@ -7,12 +7,18 @@ from django.views import View
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth.decorators import login_required
+from django.utils.crypto import get_random_string
 from .forms import UserRegistrationForm
 from .models import Discount, TireStorage, ServiceAppointment, User
 from .serializers import UserSerializer
+from .forms import AdminEmailAuthenticationForm
 
 
 def send_welcome_email(user_email):
+    """
+    Отправляет приветственное письмо новому пользователю.
+    """
     subject = 'Добро пожаловать на ProffShina!'
     message = 'Спасибо за регистрацию на нашем сайте!'
     from_email = settings.DEFAULT_FROM_EMAIL
@@ -20,7 +26,29 @@ def send_welcome_email(user_email):
     send_mail(subject, message, from_email, recipient_list)
 
 
+class AdminLoginView(View):
+    def get(self, request):
+        form = AdminEmailAuthenticationForm()
+        return render(request, 'admin/login.html', {'form': form})
+
+    def post(self, request):
+        form = AdminEmailAuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            if user.is_staff or user.is_superuser:
+                login(request, user)
+                return redirect('/admin/')
+            else:
+                messages.error(request, 'Недостаточно прав для доступа')
+        return render(request, 'admin/login.html', {'form': form})
+
+
+
+
 class RegisterView(View):
+    """
+    Представление для регистрации пользователя.
+    """
     def get(self, request):
         form = UserRegistrationForm()
         return render(request, 'user_registration/register.html', {'form': form})
@@ -31,9 +59,10 @@ class RegisterView(View):
             try:
                 user = form.save(commit=False)
                 raw_password = form.cleaned_data.get('password1')
-                user.set_password(raw_password)  # Убедимся, что пароль установлен
+                user.set_password(raw_password)  # Устанавливаем пароль пользователя
                 user.save()
-                user = authenticate(username=user.email, password=raw_password)
+                # Аутентификация пользователя после регистрации
+                user = authenticate(username=user.phone_number, password=raw_password)
                 if user is not None:
                     login(request, user)
                     messages.success(request, 'Регистрация прошла успешно!')
@@ -46,24 +75,28 @@ class RegisterView(View):
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
         return render(request, 'user_registration/register.html', {'form': form})
 
-
 class LoginView(View):
+    """
+    Представление для входа пользователя в систему.
+    """
     def get(self, request):
         return render(request, 'user_registration/login.html')
 
     def post(self, request):
-        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
         password = request.POST.get('password')
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=phone_number, password=password)
         if user is not None:
             login(request, user)
             return redirect('personal_cabinet')
         else:
-            messages.error(request, 'Неверный email или пароль')
+            messages.error(request, 'Неверный номер телефона или пароль')
         return render(request, 'user_registration/login.html')
 
-
 class PersonalCabinetView(View):
+    """
+    Представление для отображения личного кабинета пользователя.
+    """
     def get(self, request):
         user = request.user
         try:
@@ -78,8 +111,10 @@ class PersonalCabinetView(View):
             'tire_storages': tire_storages
         })
 
-
 class BookServiceView(View):
+    """
+    Представление для записи на обслуживание автомобиля.
+    """
     def get(self, request):
         return render(request, 'user_registration/book_service.html')
 
@@ -94,8 +129,10 @@ class BookServiceView(View):
         messages.success(request, 'Вы успешно записались на обслуживание!')
         return redirect('personal_cabinet')
 
-
 class ServiceAppointmentListView(APIView):
+    """
+    API представление для получения списка всех записей на обслуживание и создания новой записи.
+    """
     def get(self, request):
         appointments = ServiceAppointment.objects.all()
         appointments_data = [{'user': appointment.user.username,
@@ -118,8 +155,10 @@ class ServiceAppointmentListView(APIView):
         appointment.save()
         return Response({'status': 'Запись создана'}, status=status.HTTP_201_CREATED)
 
-
 class ServiceAppointmentDetailView(APIView):
+    """
+    API представление для получения информации о конкретной записи на обслуживание и её удаления.
+    """
     def get(self, request, pk):
         try:
             appointment = ServiceAppointment.objects.get(pk=pk)
@@ -140,15 +179,19 @@ class ServiceAppointmentDetailView(APIView):
         except ServiceAppointment.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-
 class UserListView(APIView):
+    """
+    API представление для получения списка всех пользователей.
+    """
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
-
 class UserDetailView(APIView):
+    """
+    API представление для получения информации о конкретном пользователе и его удаления.
+    """
     def get(self, request, pk):
         try:
             user = User.objects.get(pk=pk)
@@ -166,3 +209,22 @@ class UserDetailView(APIView):
 
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# @login_required
+# def admin_register_user(request):
+#     """
+#     Представление для регистрации пользователя на автосервисе с генерацией случайного пароля и отправкой SMS.
+#     """
+#     if request.method == 'POST':
+#         form = AdminUserRegistrationForm(request.POST)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+#             raw_password = get_random_string(length=8)  # Генерация случайного пароля длиной 8 символов
+#             user.set_password(raw_password)  # Установка сгенерированного пароля
+#             user.save()
+#             send_sms(user.phone_number, f"Ваш новый пароль: {raw_password}")  # Отправка SMS с паролем
+#             messages.success(request, 'Пользователь успешно зарегистрирован!')
+#             return redirect('admin_register_user')
+#     else:
+#         form = AdminUserRegistrationForm()
+#     return render(request, 'registration/admin_register_user.html', {'form': form})

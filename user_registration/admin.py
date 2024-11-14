@@ -1,27 +1,71 @@
 from django.contrib import admin
 from user_registration.models import User, Discount, TireStorage, ServiceAppointment
+from django.utils.crypto import get_random_string
+from twilio.rest import Client  # Импорт Twilio для отправки SMS
 
 class UserAdmin(admin.ModelAdmin):
+    """
+    Класс для управления моделью пользователя в административной панели.
+    """
     list_display = ('email', 'username', 'first_name', 'last_name', 'phone_number', 'is_staff')
     search_fields = ('email', 'username', 'first_name', 'last_name', 'phone_number')
     list_filter = ('is_staff', 'is_superuser', 'is_active')
     ordering = ('email',)
+    exclude = ('password',)  # Исключаем поле password из админки
+
+    def save_model(self, request, obj, form, change):
+        """
+        Переопределяем метод save_model, чтобы сгенерировать пароль и отправить SMS при создании пользователя.
+        """
+        if not change:  # Только при создании нового пользователя
+            raw_password = get_random_string(length=8)
+            obj.set_password(raw_password)
+            obj.save()
+            self.send_sms(obj.phone_number, f"Ваш новый пароль: {raw_password}")
+        else:
+            super().save_model(request, obj, form, change)
+
+    def send_sms(self, phone_number, message):
+        """
+        Функция для отправки SMS-сообщений с использованием сервиса Twilio.
+        """
+        account_sid = 'your_account_sid'  # Замените на ваш SID аккаунта
+        auth_token = 'your_auth_token'  # Замените на ваш токен аутентификации
+        client = Client(account_sid, auth_token)
+
+        client.messages.create(
+            body=message,
+            from_='+1234567890',  # Ваш номер, зарегистрированный в Twilio
+            to=phone_number
+        )
 
 admin.site.register(User, UserAdmin)
 
 class DiscountAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения скидок в административной панели.
+    """
     list_display = ('user_full_name', 'user_email', 'user_phone_number', 'total_spent', 'calculate_discount')
     search_fields = ('user__username', 'user__email', 'user__first_name', 'user__last_name', 'user__phone_number')
     list_filter = ('user', 'total_spent')
     raw_id_fields = ('user',)  # Поле автозаполнения для пользователя
 
     def user_full_name(self, obj):
+        """
+        Возвращает полное имя пользователя.
+        """
         return f"{obj.user.first_name} {obj.user.last_name}"
 
     def user_email(self, obj):
+        """
+        Возвращает email пользователя.
+        """
         return obj.user.email
 
     def user_phone_number(self, obj):
+        """
+        Возвращает номер телефона пользователя.
+        """
         return obj.user.phone_number
 
     user_full_name.short_description = 'Full Name'
@@ -31,15 +75,24 @@ class DiscountAdmin(admin.ModelAdmin):
 admin.site.register(Discount, DiscountAdmin)
 
 class TireStorageAdmin(admin.ModelAdmin):
+    """
+    Настройка отображения информации о хранении шин в административной панели.
+    """
     list_display = ('user_full_name', 'user_phone_number', 'entry_date', 'exit_date', 'calculate_storage_cost')
     search_fields = ('user__username', 'user__email', 'user__first_name', 'user__last_name', 'user__phone_number')
     list_filter = ('user', 'entry_date', 'exit_date')
     autocomplete_fields = ['user']  # Поле автозаполнения для пользователя
 
     def user_full_name(self, obj):
+        """
+        Возвращает полное имя пользователя.
+        """
         return f"{obj.user.first_name} {obj.user.last_name}"
 
     def user_phone_number(self, obj):
+        """
+        Возвращает номер телефона пользователя.
+        """
         return obj.user.phone_number
 
     user_full_name.short_description = 'Full Name'
@@ -57,9 +110,15 @@ class ServiceAppointmentAdmin(admin.ModelAdmin):
     autocomplete_fields = ['user']  # Поле автозаполнения для пользователя
 
     def user_full_name(self, obj):
+        """
+        Возвращает полное имя пользователя.
+        """
         return f"{obj.user.first_name} {obj.user.last_name}"
 
     def user_phone_number(self, obj):
+        """
+        Возвращает номер телефона пользователя.
+        """
         return obj.user.phone_number
 
     user_full_name.short_description = 'Full Name'

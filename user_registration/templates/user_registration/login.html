@@ -29,7 +29,7 @@
             flex-direction: column;
             gap: 10px;
         }
-        input[type="email"], input[type="password"] {
+        input[type="text"], input[type="password"] {
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid white;
             padding: 10px;
@@ -55,8 +55,8 @@
         <h2>Вход в личный кабинет</h2>
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="phone_number">Номер телефона:</label>
+            <input type="text" id="phone_number" name="phone_number" required>
 
             <label for="password">Пароль:</label>
             <input type="password" id="password" name="password" required>
