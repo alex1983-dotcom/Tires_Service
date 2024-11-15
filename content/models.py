@@ -1,5 +1,3 @@
-from django.db import models
-
 # Create your models here.
 # Create your models here.
 from django.db import models
@@ -9,10 +7,17 @@ class DynamicArticle(models.Model):
     Этот класс определяет структуру данных для хранения статей в базе данных.
     """
     title = models.CharField(max_length=100)
-    content = models.TextField()
+    content = models.TextField(blank=True)
     author = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     rubric = models.CharField(max_length=100, default='Общая')
+    file = models.FileField(upload_to='my_articles/', blank=True,null=True)
+
+    def save(self, *args, **kwargs):
+        if self.file:
+            # Чтение содержимого файла и сохранение его в поле content
+            self.content = self.file.read().decode('utf-8')  # Декодируем, если это текстовый файл
+        super().save(*args, **kwargs)
 
     @property
     def content_html(self):

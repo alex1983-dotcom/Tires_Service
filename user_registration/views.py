@@ -50,10 +50,24 @@ class RegisterView(View):
     Представление для регистрации пользователя.
     """
     def get(self, request):
+        """
+        Обрабатывает GET-запрос для отображения формы регистрации.
+        Args:
+            request (HttpRequest): Объект запроса.
+        Returns:
+            HttpResponse: Ответ с формой регистрации.
+        """
         form = UserRegistrationForm()
         return render(request, 'user_registration/register.html', {'form': form})
 
     def post(self, request):
+        """
+        Обрабатывает POST-запрос для регистрации нового пользователя.
+        Args:
+            request (HttpRequest): Объект запроса.
+        Returns:
+            HttpResponse: Ответ с результатом регистрации.
+        """
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             try:
@@ -75,6 +89,37 @@ class RegisterView(View):
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
         return render(request, 'user_registration/register.html', {'form': form})
 
+class LoginView(View):
+    """
+    Представление для входа пользователя в систему.
+    """
+    def get(self, request):
+        """
+        Обрабатывает GET-запрос для отображения формы входа.
+        Args:
+            request (HttpRequest): Объект запроса.
+        Returns:
+            HttpResponse: Ответ с формой входа.
+        """
+        return render(request, 'user_registration/login.html')
+
+    def post(self, request):
+        """
+        Обрабатывает POST-запрос для аутентификации пользователя.
+        Args:
+            request (HttpRequest): Объект запроса.
+        Returns:
+            HttpResponse: Ответ с результатом аутентификации.
+        """
+        phone_number = request.POST.get('phone_number')
+        password = request.POST.get('password')
+        user = authenticate(request, username=phone_number, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('personal_cabinet')
+        else:
+            messages.error(request, 'Неверный номер телефона или пароль')
+        return render(request, 'user_registration/login.html')
 class LoginView(View):
     """
     Представление для входа пользователя в систему.
@@ -210,21 +255,3 @@ class UserDetailView(APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# @login_required
-# def admin_register_user(request):
-#     """
-#     Представление для регистрации пользователя на автосервисе с генерацией случайного пароля и отправкой SMS.
-#     """
-#     if request.method == 'POST':
-#         form = AdminUserRegistrationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             raw_password = get_random_string(length=8)  # Генерация случайного пароля длиной 8 символов
-#             user.set_password(raw_password)  # Установка сгенерированного пароля
-#             user.save()
-#             send_sms(user.phone_number, f"Ваш новый пароль: {raw_password}")  # Отправка SMS с паролем
-#             messages.success(request, 'Пользователь успешно зарегистрирован!')
-#             return redirect('admin_register_user')
-#     else:
-#         form = AdminUserRegistrationForm()
-#     return render(request, 'registration/admin_register_user.html', {'form': form})
