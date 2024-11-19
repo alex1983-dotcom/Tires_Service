@@ -3,6 +3,7 @@ from user_registration.models import User, Discount, TireStorage, ServiceAppoint
 from django.utils.crypto import get_random_string
 from twilio.rest import Client  # Импорт Twilio для отправки SMS
 
+
 class UserAdmin(admin.ModelAdmin):
     """
     Класс для управления моделью пользователя в административной панели.
@@ -29,17 +30,19 @@ class UserAdmin(admin.ModelAdmin):
         """
         Функция для отправки SMS-сообщений с использованием сервиса Twilio.
         """
-        account_sid = 'your_account_sid'  # Замените на ваш SID аккаунта
-        auth_token = 'your_auth_token'  # Замените на ваш токен аутентификации
+        account_sid = 'ACed36e0db4aac8d4e6394ed59722b0855'  # Замените на ваш SID аккаунта
+        auth_token = '17dc23687e36b441548676998d1107c6'  # Замените на ваш токен аутентификации
         client = Client(account_sid, auth_token)
 
         client.messages.create(
             body=message,
-            from_='+1234567890',  # Ваш номер, зарегистрированный в Twilio
+            from_='+14128378357',  # Ваш номер, зарегистрированный в Twilio
             to=phone_number
         )
 
+
 admin.site.register(User, UserAdmin)
+
 
 class DiscountAdmin(admin.ModelAdmin):
     """
@@ -72,7 +75,9 @@ class DiscountAdmin(admin.ModelAdmin):
     user_email.short_description = 'Email'
     user_phone_number.short_description = 'Phone Number'
 
+
 admin.site.register(Discount, DiscountAdmin)
+
 
 class TireStorageAdmin(admin.ModelAdmin):
     """
@@ -98,7 +103,9 @@ class TireStorageAdmin(admin.ModelAdmin):
     user_full_name.short_description = 'Full Name'
     user_phone_number.short_description = 'Phone Number'
 
+
 admin.site.register(TireStorage, TireStorageAdmin)
+
 
 class ServiceAppointmentAdmin(admin.ModelAdmin):
     """
@@ -123,5 +130,6 @@ class ServiceAppointmentAdmin(admin.ModelAdmin):
 
     user_full_name.short_description = 'Full Name'
     user_phone_number.short_description = 'Phone Number'
+
 
 admin.site.register(ServiceAppointment, ServiceAppointmentAdmin)
