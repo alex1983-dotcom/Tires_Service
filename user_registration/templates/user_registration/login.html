@@ -4,65 +4,95 @@
     <meta charset="UTF-8">
     <title>Вход в личный кабинет</title>
     <style>
+        /* Стилизация для элемента body */
         body {
-            font-family: Arial, sans-serif;
-            background-image: url('/media/колесо.jpg');
-            background-size: cover;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            font-family: Arial, sans-serif;  /* Устанавливает шрифт Arial для всего тела документа */
+            background-image: url('/media/колесо.jpg');  /* Устанавливает фоновое изображение */
+            background-size: cover;  /* Масштабирует фоновое изображение, чтобы оно заполняло весь фон */
+            color: white;  /* Устанавливает белый цвет текста */
+            display: flex;  /* Использует Flexbox для расположения элементов внутри body */
+            justify-content: center;  /* Центрирует элементы по горизонтали */
+            align-items: center;  /* Центрирует элементы по вертикали */
+            height: 100vh;  /* Устанавливает высоту тела на 100% высоты окна браузера */
+            margin: 0;  /* Убирает отступы */
         }
+        /* Стилизация для контейнера формы */
         .form-container {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);  /* Устанавливает полупрозрачный черный фон */
+            padding: 20px;  /* Устанавливает внутренние отступы */
+            border-radius: 10px;  /* Скругляет углы контейнера */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);  /* Добавляет тень к контейнеру */
         }
+        /* Стилизация для заголовка второго уровня */
         h2 {
-            text-align: center;
+            text-align: center;  /* Выравнивает текст заголовка по центру */
         }
+        /* Стилизация для формы */
         form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: flex;  /* Использует Flexbox для расположения элементов формы */
+            flex-direction: column;  /* Располагает элементы в колонку */
+            gap: 10px;  /* Устанавливает промежутки между элементами формы */
         }
+        /* Стилизация для кнопки "Назад на главную" */
+        .back-button {
+            position: absolute;  /* Абсолютное позиционирование кнопки */
+            top: 10px;  /* Расположение кнопки сверху */
+            left: 10px;  /* Расположение кнопки слева */
+            background: rgba(0, 0, 0, 0.7);  /* Полупрозрачный черный фон кнопки */
+            color: white;  /* Белый цвет текста кнопки */
+            padding: 10px;  /* Внутренние отступы кнопки */
+            border: none;  /* Убирает рамку у кнопки */
+            border-radius: 5px;  /* Скругленные углы кнопки */
+            cursor: pointer;  /* Указатель курсора при наведении */
+            font-size: 16px;  /* Размер шрифта кнопки */
+            text-decoration: none;  /* Убирает подчеркивание текста */
+        }
+        /* Стилизация для полей ввода */
         input[type="text"], input[type="password"] {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid white;
-            padding: 10px;
-            border-radius: 5px;
-            color: white;
+            background: rgba(255, 255, 255, 0.2);  /* Полупрозрачный белый фон для полей ввода */
+            border: 1px solid white;  /* Белая рамка для полей ввода */
+            padding: 10px;  /* Внутренние отступы для полей ввода */
+            border-radius: 5px;  /* Скругленные углы полей ввода */
+            color: white;  /* Белый цвет текста в полях ввода */
         }
+        /* Стилизация для кнопок */
         button {
-            background: black;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
+            background: black;  /* Черный фон кнопки */
+            color: white;  /* Белый цвет текста кнопки */
+            padding: 10px;  /* Внутренние отступы кнопки */
+            border: none;  /* Убирает рамку у кнопки */
+            border-radius: 5px;  /* Скругленные углы кнопки */
+            cursor: pointer;  /* Указатель курсора при наведении */
+            font-size: 16px;  /* Размер шрифта кнопки */
         }
-        button:hover {
-            background: darkgray;
+        /* Стилизация для кнопки "Назад на главную" при наведении */
+        .back-button:hover {
+            background: darkgray;  /* Темно-серый фон кнопки при наведении */
         }
     </style>
 </head>
 <body>
+    <!-- Ссылка для возврата на главную страницу -->
+    <a href="{% url 'home_page' %}" class="back-button">Назад на главную</a>
+    <!-- Контейнер для формы входа -->
     <div class="form-container">
         <h2>Вход в личный кабинет</h2>
+        <!-- Форма входа с методом POST и URL действия -->
         <form method="post" action="{% url 'login' %}">
-            {% csrf_token %}
+            {% csrf_token %}  <!-- Токен CSRF для защиты от атак -->
+
+            <!-- Поле для ввода номера телефона -->
             <label for="phone_number">Номер телефона:</label>
             <input type="text" id="phone_number" name="phone_number" required>
 
+            <!-- Поле для ввода пароля -->
             <label for="password">Пароль:</label>
             <input type="password" id="password" name="password" required>
 
+            <!-- Кнопка для отправки формы -->
             <button type="submit">Войти</button>
         </form>
+        <!-- Блок для отображения сообщений -->
         {% if messages %}
             <div>
                 {% for message in messages %}
