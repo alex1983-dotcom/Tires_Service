@@ -1,0 +1,59 @@
+{% extends "forum/base.html" %}
+
+{% block content %}
+<div class="post-list">
+    <h2>Сообщения в теме: {{ thread.title }}</h2>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <p>{{ post.message }}</p>
+                <p>Автор: {{ post.created_by.username }} | Дата создания: {{ post.created_at }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'new_post' thread.id %}" class="button">Написать новое сообщение</a>
+</div>
+{% endblock %}
+
+<style>
+    .post-list {
+        margin: 50px auto;
+        max-width: 800px;
+    }
+    .post-list ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .post-list li {
+        background-color: #f8f9fa;
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .post-list p {
+        margin: 0;
+    }
+    .post-list a {
+        font-size: 20px;
+        text-decoration: none;
+        color: #007bff;
+    }
+    .post-list a:hover {
+        text-decoration: underline;
+    }
+    .button {
+        display: block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+</style>

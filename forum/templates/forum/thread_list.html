@@ -1,0 +1,56 @@
+{% extends "forum/base.html" %}
+
+{% block content %}
+<div class="thread-list">
+    <h2>Темы в категории: {{ category.name }}</h2>
+    <ul>
+        {% for thread in threads %}
+            <li>
+                <a href="{% url 'post_list_create' thread.id %}">{{ thread.title }}</a>
+                <p>Автор: {{ thread.created_by.username }} | Дата создания: {{ thread.created_at }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'new_thread' category.id %}" class="button">Создать новую тему</a>
+</div>
+{% endblock %}
+
+<style>
+    .thread-list {
+        margin: 50px auto;
+        max-width: 800px;
+    }
+    .thread-list ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .thread-list li {
+        background-color: #f8f9fa;
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .thread-list a {
+        font-size: 20px;
+        text-decoration: none;
+        color: #007bff;
+    }
+    .thread-list a:hover {
+        text-decoration: underline;
+    }
+    .button {
+        display: block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+</style>

@@ -20,7 +20,17 @@ from django.contrib.auth import views as auth_views
 from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
-from user_registration.views import RegisterView, LoginView, PersonalCabinetView, BookServiceView, ServiceAppointmentListView, ServiceAppointmentDetailView, UserListView, UserDetailView
+
+from user_registration.views import (
+    RegisterView,
+    LoginView,
+    PersonalCabinetView,
+    BookServiceView,
+    ServiceAppointmentListView,
+    ServiceAppointmentDetailView,
+    UserListView,
+    UserDetailView
+)
 
 # Основные маршруты приложения
 urlpatterns = [
@@ -28,6 +38,7 @@ urlpatterns = [
     path('content/', include('content.urls')),  # Маршруты приложения content
     path('user/', include('user_registration.urls')),  # Маршруты приложения регистрации пользователей
     path('api/', include('user_registration.urls_api')),  # Маршруты API для пользователей и записей на обслуживание
+    path('forum/', include('forum.urls')),  # Маршруты приложения форума
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),  # Обработка медиа-файлов
     path('login/', LoginView.as_view(), name='login'),  # Вход в систему
     path('logout/', auth_views.LogoutView.as_view(next_page='home_page'), name='logout'),  # Выход из системы

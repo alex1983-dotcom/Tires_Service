@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'content',
     'user_registration',
+    'forum',
 ]
 
 MIDDLEWARE = [
@@ -186,7 +188,20 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework.renderers.TemplateHTMLRenderer',
     ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
 
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True

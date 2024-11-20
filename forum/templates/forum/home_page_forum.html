@@ -1,0 +1,33 @@
+{% extends "forum/base.html" %}
+
+{% block content %}
+<div class="home-page">
+    <h2>Добро пожаловать на форум ProffShina</h2>
+    <p>Здесь вы можете обсудить различные темы и получить поддержку.</p>
+    <ul>
+        <li><a href="{% url 'category_list' %}">Категории</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+<style>
+    .home-page {
+        text-align: center;
+        margin-top: 50px;
+    }
+    .home-page ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .home-page li {
+        margin-bottom: 10px;
+    }
+    .home-page a {
+        font-size: 20px;
+        text-decoration: none;
+        color: #007bff;
+    }
+    .home-page a:hover {
+        text-decoration: underline;
+    }
+</style>

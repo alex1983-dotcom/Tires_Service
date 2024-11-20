@@ -74,7 +74,7 @@
             object-fit: cover;
         }
         /* Стиль для ссылок регистрации и входа */
-        .register-link, .login-link {
+        .register-link, .login-link, .forum-link {
             background-color: rgba(255, 255, 255, 0.7);
             color: black;
             padding: 10px 20px;
@@ -86,7 +86,7 @@
             text-align: center;  /* Выравниваем текст по центру */
         }
         /* Стиль для ссылок при наведении */
-        .register-link:hover, .login-link:hover {
+        .register-link:hover, .login-link:hover, .forum-link:hover {
             background-color: rgba(255, 255, 255, 1);
         }
         /* Стиль для контейнера кнопок */
@@ -138,6 +138,7 @@
     <div class="button-container">
         <a href="{% url 'register' %}" class="register-link">Стать клиентом ProffShina</a>
         <a href="{% url 'login' %}" class="login-link">Вход в личный кабинет</a>
+        <a href="{% url 'category_list_create' %}" class="forum-link">Перейти на форум</a> <!-- Новая кнопка для форума -->
     </div>
 </body>
 </html>

@@ -1,0 +1,41 @@
+{% extends "forum/base.html" %}
+
+{% block content %}
+<div class="category-list">
+    <h2>Категории форума</h2>
+    <ul>
+        {% for category in categories %}
+            <li>
+                <a href="{% url 'thread_list_create' category.id %}">{{ category.name }}</a>
+                <p>{{ category.description }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+<style>
+    .category-list {
+        margin: 50px auto;
+        max-width: 800px;
+    }
+    .category-list ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .category-list li {
+        background-color: #f8f9fa;
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .category-list a {
+        font-size: 20px;
+        text-decoration: none;
+        color: #007bff;
+    }
+    .category-list a:hover {
+        text-decoration: underline;
+    }
+</style>
