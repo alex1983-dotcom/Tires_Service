@@ -88,6 +88,7 @@ class RegisterView(View):
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
         return render(request, 'user_registration/register.html', {'form': form})
 
+
 class LoginView(View):
     """
     Представление для входа пользователя в систему.
@@ -119,26 +120,6 @@ class LoginView(View):
         else:
             messages.error(request, 'Неверный номер телефона или пароль')
         return render(request, 'user_registration/login.html')
-class LoginView(View):
-    """
-    Представление для входа пользователя в систему.
-    """
-    def get(self, request):
-        return render(request, 'user_registration/login.html')
-
-    def post(self, request):
-        phone_number = request.POST.get('phone_number')
-        password = request.POST.get('password')
-        user = authenticate(request, username=phone_number, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('personal_cabinet')
-        else:
-            messages.error(request, 'Неверный номер телефона или пароль')
-        return render(request, 'user_registration/login.html')
-
-
-
 
 
 @method_decorator(login_required, name='dispatch')
@@ -161,7 +142,6 @@ class PersonalCabinetView(View):
         })
 
 
-
 class BookServiceView(View):
     """
     Представление для записи на обслуживание автомобиля.
@@ -179,6 +159,7 @@ class BookServiceView(View):
 
         messages.success(request, 'Вы успешно записались на обслуживание!')
         return redirect('personal_cabinet')
+
 
 class ServiceAppointmentListView(APIView):
     """
