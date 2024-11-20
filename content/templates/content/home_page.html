@@ -98,6 +98,15 @@
             flex-direction: column;  /* Делаем расположение кнопок в столбик */
             align-items: flex-end;  /* Выравниваем кнопки справа */
         }
+        /* Стиль для дополнительной информации */
+        .additional-info {
+            font-style: italic;  /* Наклонный шрифт */
+            color: lightgray;  /* Светло-серый цвет текста для большего контраста */
+        }
+        /* Стиль для основного содержимого */
+        .main-content {
+            font-style: italic;  /* Наклонный шрифт */
+        }
     </style>
 </head>
 <body>
@@ -116,9 +125,9 @@
         <!-- Заголовок страницы -->
         <h1 style="font-family: 'Palace Script MT', cursive; font-size: 100px;">{{ home_page.title }}</h1>
         <!-- Основное содержимое страницы -->
-        <p>{{ home_page.content }}</p>
+        <p class="main-content">{{ home_page.content }}</p>
         <!-- Дополнительная информация -->
-        <div>
+        <div class="additional-info">
             <p>Адрес: {{ home_page.address }}</p>
             <p>Телефон: {{ home_page.phone }}</p>
             <p>УНП: {{ home_page.unp }}</p>
@@ -132,4 +141,3 @@
     </div>
 </body>
 </html>
-

@@ -191,3 +191,11 @@ REST_FRAMEWORK = {
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True
 
+# Настройка сессий в Django
+SESSION_COOKIE_AGE = 1209600  # Две недели
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Сессия не завершится при закрытии браузера
+SESSION_SAVE_EVERY_REQUEST = True  # Сохраняет сессию при каждом запросе
+
+# Настройки для страницы входа
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/personal_cabinet/'

@@ -83,9 +83,9 @@ class TireStorageAdmin(admin.ModelAdmin):
     """
     Настройка отображения информации о хранении шин в административной панели.
     """
-    list_display = ('user_full_name', 'user_phone_number', 'entry_date', 'exit_date', 'calculate_storage_cost')
-    search_fields = ('user__username', 'user__email', 'user__first_name', 'user__last_name', 'user__phone_number')
-    list_filter = ('user', 'entry_date', 'exit_date')
+    list_display = ('user_full_name', 'user_phone_number', 'entry_date', 'exit_date', 'tire_model', 'tire_size', 'quantity', 'calculate_storage_cost')
+    search_fields = ('user__username', 'user__email', 'user__first_name', 'user__last_name', 'user__phone_number', 'tire_model', 'tire_size', 'quantity')
+    list_filter = ('user', 'entry_date', 'exit_date', 'tire_model', 'tire_size')
     autocomplete_fields = ['user']  # Поле автозаполнения для пользователя
 
     def user_full_name(self, obj):

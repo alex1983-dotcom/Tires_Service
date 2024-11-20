@@ -13,6 +13,7 @@ from .forms import UserRegistrationForm
 from .models import Discount, TireStorage, ServiceAppointment, User
 from .serializers import UserSerializer
 from .forms import AdminEmailAuthenticationForm
+from django.utils.decorators import method_decorator
 
 
 def send_welcome_email(user_email):
@@ -41,8 +42,6 @@ class AdminLoginView(View):
             else:
                 messages.error(request, 'Недостаточно прав для доступа')
         return render(request, 'admin/login.html', {'form': form})
-
-
 
 
 class RegisterView(View):
@@ -138,6 +137,11 @@ class LoginView(View):
             messages.error(request, 'Неверный номер телефона или пароль')
         return render(request, 'user_registration/login.html')
 
+
+
+
+
+@method_decorator(login_required, name='dispatch')
 class PersonalCabinetView(View):
     """
     Представление для отображения личного кабинета пользователя.
@@ -155,6 +159,8 @@ class PersonalCabinetView(View):
             'discount': discount,
             'tire_storages': tire_storages
         })
+
+
 
 class BookServiceView(View):
     """

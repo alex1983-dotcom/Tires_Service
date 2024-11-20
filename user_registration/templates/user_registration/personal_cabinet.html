@@ -22,6 +22,9 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             width: 80%;
             max-width: 600px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
         h2, h3 {
             text-align: center;
@@ -48,21 +51,40 @@
             border-radius: 5px;
             margin-top: 20px;
         }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
+    <a href="{% url 'home_page' %}" class="back-button">Назад на главную</a>
     <div class="container">
         <h2>Личный кабинет</h2>
         <p>Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!</p>
         {% if discount %}
-            <p>Текущая скидка: {{ discount.calculate_discount }}%</p>
+            <p>Ваша текущая скидка: {{ discount.calculate_discount }}%</p>
         {% else %}
             <p>У вас нет доступных скидок.</p>
         {% endif %}
         <h3>Информация о хранении шин</h3>
         <ul>
             {% for storage in tire_storages %}
-                <li>Дата поступления: {{ storage.entry_date }} - Дата выдачи: {{ storage.exit_date }} - Стоимость хранения: {{ storage.calculate_storage_cost }}р</li>
+                <li>Модель шины: {{ storage.tire_model }}</li>
+                <li>Размер шины: {{ storage.tire_size }}</li>
+                <li>Количество шин: {{ storage.quantity }}</li> <!-- Убедитесь, что поле quantity существует в вашей модели -->
+                <li>Дата поступления: {{ storage.entry_date }}</li>
+                <li>Дата выдачи: {{ storage.exit_date }}</li>
+                <li>Стоимость хранения: {{ storage.calculate_storage_cost }}р</li>
             {% endfor %}
         </ul>
         <div class="logout">

@@ -96,6 +96,7 @@ class Discount(models.Model):
     def __str__(self):
         return f"Скидка для {self.user.username}: {self.calculate_discount()}%"
 
+
 class TireStorage(models.Model):
     """
     Класс модели для хранения информации о шинах.
@@ -104,11 +105,11 @@ class TireStorage(models.Model):
     entry_date = models.DateField()
     exit_date = models.DateField(null=True, blank=True)
     daily_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0.15)
+    tire_model = models.CharField(max_length=50, default='Неизвестная модель')  # Поле для модели шины с значением по умолчанию
+    tire_size = models.CharField(max_length=20, default='Неизвестный размер')   # Поле для размера шины с значением по умолчанию
+    quantity = models.CharField(max_length=2, default='Неизвестное количество')
 
     def calculate_storage_cost(self):
-        """
-        Рассчитывает стоимость хранения шины исходя из цены хранения в сутки.
-        """
         from datetime import date
         days_stored = (self.exit_date or date.today()) - self.entry_date
         return days_stored.days * self.daily_rate
@@ -119,6 +120,7 @@ class TireStorage(models.Model):
 
     def __str__(self):
         return f"Хранение шины для {self.user.username}: {self.calculate_storage_cost()}р"
+
 
 class ServiceAppointment(models.Model):
     """
