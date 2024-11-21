@@ -6,7 +6,7 @@
     <ul>
         {% for category in categories %}
             <li>
-                <a href="{% url 'thread_list_create' category.id %}">{{ category.name }}</a>
+                <a href="{% url 'thread_list' category.id %}">{{ category.name }}</a>
                 <p>{{ category.description }}</p>
             </li>
         {% endfor %}

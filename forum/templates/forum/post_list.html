@@ -7,11 +7,19 @@
         {% for post in posts %}
             <li>
                 <p>{{ post.message }}</p>
-                <p>Автор: {{ post.created_by.username }} | Дата создания: {{ post.created_at }}</p>
+                <p>Автор: {{ post.created_by.username }} | Дата: {{ post.created_at }}</p>
             </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'new_post' thread.id %}" class="button">Написать новое сообщение</a>
+    {% if user.is_authenticated %}
+    <form action="{% url 'post_list' thread.id %}" method="post">
+        {% csrf_token %}
+        <textarea name="content" rows="4" cols="50" placeholder="Напишите ваше сообщение здесь..."></textarea>
+        <button type="submit">Отправить</button>
+    </form>
+    {% else %}
+    <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставлять сообщения.</p>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -31,29 +39,24 @@
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    .post-list p {
-        margin: 0;
+    .post-list form {
+        margin-top: 20px;
     }
-    .post-list a {
-        font-size: 20px;
-        text-decoration: none;
-        color: #007bff;
+    .post-list textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
     }
-    .post-list a:hover {
-        text-decoration: underline;
-    }
-    .button {
-        display: block;
+    .post-list button {
         padding: 10px 20px;
         background-color: #007bff;
         color: white;
-        text-decoration: none;
+        border: none;
         border-radius: 5px;
-        text-align: center;
-        margin-top: 20px;
-        transition: background-color 0.3s;
+        cursor: pointer;
     }
-    .button:hover {
+    .post-list button:hover {
         background-color: #0056b3;
     }
 </style>

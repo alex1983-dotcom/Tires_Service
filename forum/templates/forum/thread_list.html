@@ -6,12 +6,11 @@
     <ul>
         {% for thread in threads %}
             <li>
-                <a href="{% url 'post_list_create' thread.id %}">{{ thread.title }}</a>
+                <a href="{% url 'post_list' thread.id %}">{{ thread.title }}</a>
                 <p>Автор: {{ thread.created_by.username }} | Дата создания: {{ thread.created_at }}</p>
             </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'new_thread' category.id %}" class="button">Создать новую тему</a>
 </div>
 {% endblock %}
 
@@ -38,19 +37,5 @@
     }
     .thread-list a:hover {
         text-decoration: underline;
-    }
-    .button {
-        display: block;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        text-align: center;
-        margin-top: 20px;
-        transition: background-color 0.3s;
-    }
-    .button:hover {
-        background-color: #0056b3;
     }
 </style>
