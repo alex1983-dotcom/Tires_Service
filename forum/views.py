@@ -24,7 +24,8 @@ class ThreadListView(LoginRequiredMixin, View):
         context = {'category': category, 'threads': threads}
         return render(request, self.template_name, context)
 
-class PostListView(LoginRequiredMixin, View):
+
+class PostListView(View):
     template_name = 'forum/post_list.html'
 
     def get(self, request, thread_id, *args, **kwargs):
@@ -36,6 +37,9 @@ class PostListView(LoginRequiredMixin, View):
     def post(self, request, thread_id, *args, **kwargs):
         thread = get_object_or_404(Thread, id=thread_id)
         content = request.POST.get('content')
+        parent_id = request.POST.get('parent_id')
+        parent = Post.objects.get(id=parent_id) if parent_id else None
         if content:
-            Post.objects.create(thread=thread, created_by=request.user, message=content)
+            Post.objects.create(thread=thread, created_by=request.user, message=content, parent=parent)
         return redirect('post_list', thread_id=thread.id)
+

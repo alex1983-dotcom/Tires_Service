@@ -37,6 +37,7 @@ class Post(models.Model):
     message = models.TextField(help_text="Текст сообщения")
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, help_text="Пользователь, создавший сообщение")
     created_at = models.DateTimeField(auto_now_add=True, help_text="Дата и время создания сообщения")
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE, help_text="Родительское сообщение, если это ответ")
 
     def __str__(self):
         """

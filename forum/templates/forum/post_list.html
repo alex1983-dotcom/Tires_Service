@@ -1,62 +1,216 @@
-{% extends "forum/base.html" %}
+<!-- post_list.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сообщения - Форум ProffShina</title>
+    <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/media/колесо.jpg');
+            background-size: cover;
+            background-attachment: fixed;  /* Фон будет статичным при прокрутке */
+            background-position: center;    /* Центрируем фон */
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-{% block content %}
-<div class="post-list">
-    <h2>Сообщения в теме: {{ thread.title }}</h2>
-    <ul>
-        {% for post in posts %}
-            <li>
-                <p>{{ post.message }}</p>
-                <p>Автор: {{ post.created_by.username }} | Дата: {{ post.created_at }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-    {% if user.is_authenticated %}
-    <form action="{% url 'post_list' thread.id %}" method="post">
-        {% csrf_token %}
-        <textarea name="content" rows="4" cols="50" placeholder="Напишите ваше сообщение здесь..."></textarea>
-        <button type="submit">Отправить</button>
-    </form>
-    {% else %}
-    <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставлять сообщения.</p>
-    {% endif %}
-</div>
-{% endblock %}
+        /* Стили для контейнера */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-<style>
-    .post-list {
-        margin: 50px auto;
-        max-width: 800px;
-    }
-    .post-list ul {
-        list-style-type: none;
-        padding: 0;
-    }
-    .post-list li {
-        background-color: #f8f9fa;
-        margin-bottom: 10px;
-        padding: 15px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .post-list form {
-        margin-top: 20px;
-    }
-    .post-list textarea {
-        width: 100%;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-    }
-    .post-list button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    .post-list button:hover {
-        background-color: #0056b3;
-    }
-</style>
+        /* Стили для заголовка темы */
+        .thread-title {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        /* Стили для списка сообщений */
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .message-item {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Стили для сообщения */
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Стили для информации о сообщении */
+        .message-info {
+            color: #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Стили для кнопки "Ответить" */
+        .reply-button {
+            background-color: #d3d3d3;
+            border: none;
+            color: #333;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .reply-button:hover {
+            background-color: #c0c0c0;
+        }
+
+        /* Стили для формы ответа */
+        .reply-form {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        /* Стили для кнопки "Отправить" */
+        .button {
+            background-color: #d3d3d3;
+            border: none;
+            color: #333;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #c0c0c0;
+        }
+
+        /* Стили для кнопки "Назад на главную" */
+        .back-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            z-index: 2;
+        }
+    </style>
+
+    <!-- Основной HTML-код -->
+    <body>
+        <!-- Кнопка "Назад на главную" -->
+        <a href="{% url 'forum_home_page' %}" class="back-button">Назад на главную</a>
+        <div class="container">
+            <!-- Заголовок темы -->
+            <div class="thread-title">
+                <h2>Сообщения по теме: {{ thread.title }}</h2>
+            </div>
+            <!-- Список сообщений -->
+            <ul class="message-list">
+                {% for post in posts %}
+                    <li class="message-item">
+                        <div class="message">
+                            <!-- Содержимое сообщения -->
+                            <p>{{ post.message }}</p>
+                        </div>
+                        <!-- Информация об авторе и дате -->
+                        <div class="message-info">
+                            <p>Автор: {{ post.created_by.username }}</p>
+                            <p>Дата: {{ post.created_at }}</p>
+                        </div>
+                        <!-- Кнопка "Ответить" -->
+                        {% if user.is_authenticated %}
+                        <button class="reply-button" data-post-id="{{ post.id }}">Ответить</button>
+                        <!-- Форма ответа -->
+                        <div class="reply-form" id="reply-form-{{ post.id }}">
+                            <form action="{% url 'post_list' thread.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="parent_id" value="{{ post.id }}">
+                                <textarea name="content" rows="2" cols="50" placeholder="Напишите ваш ответ здесь..."></textarea>
+                                <button type="submit" class="button">Отправить</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                        <!-- Ответы на сообщение -->
+                        {% for reply in post.replies.all %}
+                            <div class="reply">
+                                <p>{{ reply.message }}</p>
+                                <div class="message-info">
+                                    <p>Автор: {{ reply.created_by.username }}</p>
+                                    <p>Дата: {{ reply.created_at }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <!-- Форма нового сообщения -->
+            {% if user.is_authenticated %}
+            <form action="{% url 'post_list' thread.id %}" method="post">
+                {% csrf_token %}
+                <textarea name="content" rows="4" cols="50" placeholder="Напишите ваше сообщение здесь..."></textarea>
+                <button type="submit" class="button">Отправить</button>
+            </form>
+            {% else %}
+            <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставлять сообщения.</p>
+            {% endif %}
+        </div>
+
+        <!-- Скрипт для отображения/скрытия формы ответа -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Находим все кнопки с классом "reply-button" и добавляем обработчик событий на клик
+                document.querySelectorAll('.reply-button').forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const postId = this.getAttribute('data-post-id');
+                        const replyForm = document.getElementById(`reply-form-${postId}`);
+                        if (replyForm) {
+                            replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

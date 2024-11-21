@@ -1,3 +1,4 @@
+<!-- base.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,6 +7,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Форум ProffShina{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/media/колесо.jpg');
+            background-size: cover;
+            color: white;
+            margin: 0;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav li {
+            margin: 0 15px;
+        }
+        nav a {
+            background-color: #d3d3d3;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        nav a:hover {
+            background-color: #c0c0c0;
+        }
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+        }
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+        .back-button {
+            background-color: #d3d3d3;
+            color: #333;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .back-button:hover {
+            background-color: #c0c0c0;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -23,5 +88,6 @@
     <footer>
         <p>&copy; 2024 ProffShina</p>
     </footer>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
