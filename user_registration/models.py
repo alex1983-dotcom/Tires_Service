@@ -15,16 +15,18 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None):
+    def create_superuser(self, phone_number, email, password=None, username='admin', middle_name=None):
         if not email:
             raise ValueError('Суперпользователи должны иметь электронную почту')
+        if not phone_number:
+            raise ValueError('Суперпользователи должны иметь номер телефона')
         user = self.create_user(
-            phone_number='0000000000',  # Заглушка для phone_number
+            phone_number=phone_number,
             email=email,
             password=password,
-            username='admin',
+            username=username,
+            middle_name=middle_name,
         )
-        user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -55,7 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         Возвращает полное имя пользователя.
         """
-        return f"{self.first_name} {self.middle_name} {self.last_name}"
+        return f"{self.first_name} {self.middle_name} {self.last_name}".strip()
 
     def get_short_name(self):
         """
