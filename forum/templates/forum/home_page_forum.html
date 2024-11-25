@@ -52,6 +52,18 @@
             background-color: #c0c0c0;
             text-decoration: underline;
         }
+            .status-button {
+            background: {{ user.is_authenticated|yesno:"green,red" }};
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            position: absolute; /* Позиционирование относительно контейнера */
+            top: 25px;
+            right: 20px;
+            cursor: default;
+            font-size: 10px;
+        }
 
         /* Стили для кнопки "Назад" */
         .back-button {
@@ -69,6 +81,13 @@
         }
     </style>
 </head>
+<div class="status-button">
+        {% if user.is_authenticated %}
+            Вы вошли в систему {{ request.user.first_name }} {{ request.user.last_name }}
+        {% else %}
+            Вы не аутентифицированы
+        {% endif %}
+    </div>
 <body>
     <a href="{% url 'home_page' %}" class="back-button">Покинуть форум</a>
     <div class="home-page">

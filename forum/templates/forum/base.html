@@ -67,6 +67,18 @@
             font-size: 16px;
             text-decoration: none;
         }
+        .status-button {
+            background: {{ user.is_authenticated|yesno:"green,red" }};
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            position: absolute; /* Позиционирование относительно контейнера */
+            top: 25px;
+            right: 20px;
+            cursor: default;
+            font-size: 10px;
+        }
         .back-button:hover {
             background-color: #c0c0c0;
         }

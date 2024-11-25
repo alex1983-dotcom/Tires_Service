@@ -22,6 +22,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             width: 80%;
             max-width: 600px;
+            position: relative; /* Позволяет позиционировать дочерние элементы */
         }
         h2, h3 {
             text-align: center;
@@ -40,6 +41,51 @@
             padding: 10px;
             border-radius: 5px;
         }
+        .status-button {
+            background: {{ user.is_authenticated|yesno:"green,red" }};
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            position: absolute; /* Позиционирование относительно контейнера */
+            top: 25px;
+            right: 20px;
+            cursor: default;
+            font-size: 10px;
+        }
+        .back-button-home_page {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            }
+        /* Стиль для ссылок регистрации и входа */
+        .register-link, .login-link, .forum-link {
+            background-color: rgba(255, 255, 255, 0.7);
+            color: black;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 10px;  /* Добавляем отступ снизу */
+            display: block;  /* Делаем элемент блочным, чтобы они были в столбик */
+            text-align: center;  /* Выравниваем текст по центру */
+        }
+        .forum-link {
+            position: fixed;
+            top: 67px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;  /* Делаем расположение кнопок в столбик */
+            align-items: flex-end;  /* Выравниваем кнопки справа */
+        }
         .logout {
             background: red;
             color: white;
@@ -51,14 +97,25 @@
     </style>
 </head>
 <body>
+    <a href="{% url 'home_page' %}" class="back-button-home_page">Назад на главную форума</a>
+    <a href="{% url 'category_list' %}" class="forum-link">Форум</a>
+    <div class="status-button">
+        {% if user.is_authenticated %}
+            Вы вошли в систему {{ request.user.first_name }} {{ request.user.last_name }}
+        {% else %}
+            Вы не аутентифицированы
+        {% endif %}
+    </div>
     <div class="container">
         <h2>Личный кабинет</h2>
-        <p>Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!</p>
+
+
         {% if discount %}
             <p>Текущая скидка: {{ discount.calculate_discount }}%</p>
         {% else %}
             <p>У вас нет доступных скидок.</p>
-        {% endif  %}
+        {% endif %}
+
         <h3>Информация о хранении шин</h3>
         <ul>
             {% for storage in tire_storages %}

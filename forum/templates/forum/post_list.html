@@ -118,7 +118,18 @@
         .button:hover {
             background-color: #c0c0c0;
         }
-
+        .status-button {
+            background: {{ user.is_authenticated|yesno:"green,red" }};
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            position: absolute; /* Позиционирование относительно контейнера */
+            top: 25px;
+            right: 20px;
+            cursor: default;
+            font-size: 10px;
+        }
         /* Стили для кнопки "Назад на главную" */
         .back-button {
             position: fixed;
@@ -138,6 +149,13 @@
 
     <!-- Основной HTML-код -->
     <body>
+        <div class="status-button">
+        {% if user.is_authenticated %}
+            Вы вошли в систему {{ request.user.first_name }} {{ request.user.last_name }}
+        {% else %}
+            Вы не аутентифицированы
+        {% endif %}
+        </div>
         <!-- Кнопка "Назад на главную" -->
         <a href="{% url 'forum_home_page' %}" class="back-button">Назад на главную</a>
         <div class="container">

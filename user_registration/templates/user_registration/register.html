@@ -21,6 +21,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             width: 400px;
+            position: relative; /* Добавлено для позиционирования кнопки статуса */
         }
         h2 {
             text-align: center;
@@ -70,20 +71,42 @@
             font-size: 16px;
             text-decoration: none;
         }
+        .status-button {
+            background: {{ user.is_authenticated|yesno:"green,red" }};
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            position: absolute; /* Позиционирование относительно контейнера */
+            top: 25px;
+            right: 20px;
+            cursor: default;
+            font-size: 10px;
+        }
         .back-button:hover {
             background: darkgray;
+        }
+        .message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <a href="{% url 'home_page' %}" class="back-button">Назад на главную</a>
+    <div class="status-button">
+        {% if user.is_authenticated %}
+            Вы вошли в систему {{ request.user.first_name }} {{ request.user.last_name }}
+        {% else %}
+            Вы не аутентифицированы
+        {% endif %}
+    </div>
     <div class="form-container">
         <h2>Регистрация</h2>
+
         <form method="post" action="{% url 'register' %}">
             {% csrf_token %}
-
-
-
             <label for="last_name">Фамилия: *</label>
             <input type="text" id="last_name" name="last_name" required>
 
@@ -116,8 +139,9 @@
 
             <button type="submit">Зарегистрироваться</button>
         </form>
+
         {% if messages %}
-            <div>
+            <div class="message">
                 {% for message in messages %}
                     <p>{{ message }}</p>
                 {% endfor %}
@@ -127,7 +151,7 @@
     <script>
         function togglePasswordVisibility(fieldId) {
             var field = document.getElementById(fieldId);
-            field.type = field.type === 'password' ? 'text' : 'password';
+            field.type = (field.type === 'password') ? 'text' : 'password';
         }
     </script>
 </body>

@@ -92,11 +92,23 @@
         /* Стиль для контейнера кнопок */
         .button-container {
             position: fixed;
-            top: 10px;
+            top: 67px;
             right: 20px;
             display: flex;
             flex-direction: column;  /* Делаем расположение кнопок в столбик */
             align-items: flex-end;  /* Выравниваем кнопки справа */
+        }
+        .status-button {
+            background: {{ user.is_authenticated|yesno:"green,red" }};
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            position: absolute; /* Позиционирование относительно контейнера */
+            top: 25px;
+            right: 20px;
+            cursor: default;
+            font-size: 10px;
         }
         /* Стиль для дополнительной информации */
         .additional-info {
@@ -110,7 +122,14 @@
     </style>
 </head>
 <body>
-    <div class="sidebar">
+    <div class="status-button">
+        {% if user.is_authenticated %}
+            Вы вошли в систему {{ request.user.first_name }} {{ request.user.last_name }}
+        {% else %}
+            Вы не аутентифицированы
+        {% endif %}
+    </div>
+<div class="sidebar">
         <h3>Рубрики</h3>
         <ul>
             <!-- Проходимся по всем категориям и создаем ссылки -->
@@ -137,7 +156,11 @@
     <!-- Контейнер для ссылок на регистрацию и вход -->
     <div class="button-container">
         <a href="{% url 'register' %}" class="register-link">Стать клиентом ProffShina</a>
-        <a href="{% url 'login' %}" class="login-link">Вход в личный кабинет</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'personal_cabinet' %}" class="login-link">Вход в личный кабинет</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="login-link">Вход в личный кабинет</a>
+        {% endif %}
         <a href="{% url 'category_list' %}" class="forum-link">Перейти на форум</a> <!-- Новая кнопка для форума -->
     </div>
 </body>
