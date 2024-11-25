@@ -1,126 +1,71 @@
-{% extends "forum/base.html" %}
-
-{% block content %}
-<a href="{% url 'forum_home_page' %}" class="back-button">Назад на главную</a>
-<div class="container">
-    <h2>Сообщения в теме: {{ thread.title }}</h2>
-    <ul>
-        {% for post in posts %}
-            <li>
-                <p>{{ post.message }}</p>
-                <p>Автор: {{ post.created_by.username }} | Дата: {{ post.created_at }}</p>
-                {% if user.is_authenticated %}
-                <a href="#" class="reply-link" data-post-id="{{ post.id }}">Ответить</a>
-                <div class="reply-form" id="reply-form-{{ post.id }}" style="display: none;">
-                    <form action="{% url 'post_list' thread.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="parent_id" value="{{ post.id }}">
-                        <textarea name="content" rows="2" cols="50" placeholder="Напишите ваш ответ здесь..."></textarea>
-                        <button type="submit">Отправить</button>
-                    </form>
-                </div>
-                {% endif %}
-                {% for reply in post.replies.all %}
-                    <div class="reply">
-                        <p>{{ reply.message }}</p>
-                        <p>Автор: {{ reply.created_by.username }} | Дата: {{ reply.created_at }}</p>
-                    </div>
-                {% endfor %}
-            </li>
-        {% endfor %}
-    </ul>
-    {% if user.is_authenticated %}
-    <form action="{% url 'post_list' thread.id %}" method="post">
-        {% csrf_token %}
-        <textarea name="content" rows="4" cols="50" placeholder="Напишите ваше сообщение здесь..."></textarea>
-        <button type="submit">Отправить</button>
-    </form>
-    {% else %}
-    <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставлять сообщения.</p>
-    {% endif %}
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll('.reply-link').forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                const postId = this.getAttribute('data-post-id');
-                const replyForm = document.getElementById(`reply-form-${postId}`);
-                if (replyForm) {
-                    replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
-                }
-            });
-        });
-    });
-</script>
-{% endblock %}
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-image: url('/media/колесо.jpg');
-        background-size: cover;
-        color: white;
-        height: 100vh;
-        margin: 0;
-        padding: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-    .container {
-        background: rgba(0, 0, 0, 0.7);
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        width: 80%;
-        max-width: 800px;
-    }
-    h2 {
-        text-align: center;
-    }
-    .post-list ul {
-        list-style-type: none;
-        padding: 0;
-    }
-    .post-list li {
-        background: rgba(255, 255, 255, 0.2);
-        margin-bottom: 10px;
-        padding: 10px;
-        border-radius: 5px;
-    }
-    .reply {
-        margin-left: 20px;
-        background-color: #e9ecef;
-        padding: 10px;
-        border-radius: 5px;
-        color: black;
-    }
-    .reply-link {
-        cursor: pointer;
-        color: #007bff;
-    }
-    .reply-link:hover {
-        text-decoration: underline;
-    }
-    .reply-form {
-        margin-top: 10px;
-    }
-    .back-button {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        text-decoration: none;
-    }
-</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Вход в личный кабинет</title>
+    <style>
+        /* Стилизация для элемента body */
+        body {
+            font-family: Arial, sans-serif;  /* Устанавливает шрифт Arial для всего тела документа */
+            background-image: url('/media/колесо.jpg');  /* Устанавливает фоновое изображение */
+            background-size: cover;  /* Масштабирует фоновое изображение, чтобы оно заполняло весь фон */
+            color: white;  /* Устанавливает белый цвет текста */
+            display: flex;  /* Использует Flexbox для расположения элементов внутри body */
+            justify-content: center;  /* Центрирует элементы по горизонтали */
+            align-items: center;  /* Центрирует элементы по вертикали */
+            height: 100vh;  /* Устанавливает высоту тела на 100% высоты окна браузера */
+            margin: 0;  /* Убирает отступы */
+        }
+        /* Стилизация для контейнера формы */
+        .form-container {
+            background: rgba(0, 0, 0, 0.7);  /* Устанавливает полупрозрачный черный фон */
+            padding: 20px;  /* Устанавливает внутренние отступы */
+            border-radius: 10px;  /* Скругляет углы контейнера */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);  /* Добавляет тень к контейнеру */
+        }
+        /* Стилизация для заголовка второго уровня */
+        h2 {
+            text-align: center;  /* Выравнивает текст заголовка по центру */
+        }
+        /* Стилизация для формы */
+        form {
+            display: flex;  /* Использует Flexbox для расположения элементов формы */
+            flex-direction: column;  /* Располагает элементы в колонку */
+            gap: 10px;  /* Устанавливает промежутки между элементами формы */
+        }
+        /* Стилизация для кнопки "Назад на главную" */
+        .back-button {
+            position: absolute;  /* Абсолютное позиционирование кнопки */
+            top: 10px;  /* Расположение кнопки сверху */
+            left: 10px;  /* Расположение кнопки слева */
+            background: rgba(0, 0, 0, 0.7);  /* Полупрозрачный черный фон кнопки */
+            color: white;  /* Белый цвет текста кнопки */
+            padding: 10px;  /* Внутренние отступы кнопки */
+            border: none;  /* Убирает рамку у кнопки */
+            border-radius: 5px;  /* Скругленные углы кнопки */
+            cursor: pointer;  /* Указатель курсора при наведении */
+            font-size: 16px;  /* Размер шрифта кнопки */
+            text-decoration: none;  /* Убирает подчеркивание текста */
+        }
+        /* Стилизация для полей ввода */
+        input[type="text"], input[type="password"] {
+            background: rgba(255, 255, 255, 0.2);  /* Полупрозрачный белый фон для полей ввода */
+            border: 1px solid white;  /* Белая рамка для полей ввода */
+            padding: 10px;  /* Внутренние отступы для полей ввода */
+            border-radius: 5px;  /* Скругленные углы полей ввода */
+            color: white;  /* Белый цвет текста в полях ввода */
+        }
+        /* Стилизация для кнопок */
+        button {
+            background: black;  /* Черный фон кнопки */
+            color: white;  /* Белый цвет текста кнопки */
+            padding: 10px;  /* Внутренние отступы кнопки */
+            border: none;  /* Убирает рамку у кнопки */
+            border-radius: 5px;  /* Скругленные углы кнопки */
+            cursor: pointer;  /* Указатель курсора при наведении */
+            font-size: 16px;  /* Размер шрифта кнопки */
+        }
+        /* Стилизация для кнопки "Назад на главную" при наведении */
+        .back-button:hover {
+            background: darkgray;  /* Темно-серый фон кнопки при наведении */
+        }
+    </style>
+</head>
