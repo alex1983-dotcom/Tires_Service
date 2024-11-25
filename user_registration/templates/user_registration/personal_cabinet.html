@@ -1,71 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Вход в личный кабинет</title>
+    <title>Личный кабинет</title>
     <style>
-        /* Стилизация для элемента body */
         body {
-            font-family: Arial, sans-serif;  /* Устанавливает шрифт Arial для всего тела документа */
-            background-image: url('/media/колесо.jpg');  /* Устанавливает фоновое изображение */
-            background-size: cover;  /* Масштабирует фоновое изображение, чтобы оно заполняло весь фон */
-            color: white;  /* Устанавливает белый цвет текста */
-            display: flex;  /* Использует Flexbox для расположения элементов внутри body */
-            justify-content: center;  /* Центрирует элементы по горизонтали */
-            align-items: center;  /* Центрирует элементы по вертикали */
-            height: 100vh;  /* Устанавливает высоту тела на 100% высоты окна браузера */
-            margin: 0;  /* Убирает отступы */
+            font-family: Arial, sans-serif;
+            background-image: url('/media/колесо.jpg');
+            background-size: cover;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        /* Стилизация для контейнера формы */
-        .form-container {
-            background: rgba(0, 0, 0, 0.7);  /* Устанавливает полупрозрачный черный фон */
-            padding: 20px;  /* Устанавливает внутренние отступы */
-            border-radius: 10px;  /* Скругляет углы контейнера */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);  /* Добавляет тень к контейнеру */
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 600px;
         }
-        /* Стилизация для заголовка второго уровня */
-        h2 {
-            text-align: center;  /* Выравнивает текст заголовка по центру */
+        h2, h3 {
+            text-align: center;
         }
-        /* Стилизация для формы */
-        form {
-            display: flex;  /* Использует Flexbox для расположения элементов формы */
-            flex-direction: column;  /* Располагает элементы в колонку */
-            gap: 10px;  /* Устанавливает промежутки между элементами формы */
+        p {
+            margin-bottom: 20px;
+            font-size: 18px;
         }
-        /* Стилизация для кнопки "Назад на главную" */
-        .back-button {
-            position: absolute;  /* Абсолютное позиционирование кнопки */
-            top: 10px;  /* Расположение кнопки сверху */
-            left: 10px;  /* Расположение кнопки слева */
-            background: rgba(0, 0, 0, 0.7);  /* Полупрозрачный черный фон кнопки */
-            color: white;  /* Белый цвет текста кнопки */
-            padding: 10px;  /* Внутренние отступы кнопки */
-            border: none;  /* Убирает рамку у кнопки */
-            border-radius: 5px;  /* Скругленные углы кнопки */
-            cursor: pointer;  /* Указатель курсора при наведении */
-            font-size: 16px;  /* Размер шрифта кнопки */
-            text-decoration: none;  /* Убирает подчеркивание текста */
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
-        /* Стилизация для полей ввода */
-        input[type="text"], input[type="password"] {
-            background: rgba(255, 255, 255, 0.2);  /* Полупрозрачный белый фон для полей ввода */
-            border: 1px solid white;  /* Белая рамка для полей ввода */
-            padding: 10px;  /* Внутренние отступы для полей ввода */
-            border-radius: 5px;  /* Скругленные углы полей ввода */
-            color: white;  /* Белый цвет текста в полях ввода */
+        li {
+            background: rgba(255, 255, 255, 0.2);
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
         }
-        /* Стилизация для кнопок */
-        button {
-            background: black;  /* Черный фон кнопки */
-            color: white;  /* Белый цвет текста кнопки */
-            padding: 10px;  /* Внутренние отступы кнопки */
-            border: none;  /* Убирает рамку у кнопки */
-            border-radius: 5px;  /* Скругленные углы кнопки */
-            cursor: pointer;  /* Указатель курсора при наведении */
-            font-size: 16px;  /* Размер шрифта кнопки */
-        }
-        /* Стилизация для кнопки "Назад на главную" при наведении */
-        .back-button:hover {
-            background: darkgray;  /* Темно-серый фон кнопки при наведении */
+        .logout {
+            background: red;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            margin-top: 20px;
         }
     </style>
 </head>
+<body>
+    <div class="container">
+        <h2>Личный кабинет</h2>
+        <p>Добро пожаловать, {{ request.user.first_name }} {{ request.user.last_name }}!</p>
+        {% if discount %}
+            <p>Текущая скидка: {{ discount.calculate_discount }}%</p>
+        {% else %}
+            <p>У вас нет доступных скидок.</p>
+        {% endif  %}
+        <h3>Информация о хранении шин</h3>
+        <ul>
+            {% for storage in tire_storages %}
+                <li>Дата поступления: {{ storage.entry_date }} - Дата выдачи: {{ storage.exit_date }} - Стоимость хранения: {{ storage.calculate_storage_cost }}р</li>
+                <li>Модель шины: {{ storage.tire_model }}</li>
+                <li>Размер шины: {{ storage.tire_size }}</li>
+                <li>Количество шин: {{ storage.quantity }}</li>
+            {% endfor %}
+        </ul>
+        <div class="logout">
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" style="background:none; border:none; color:white; font-size:16px; cursor:pointer;">Выйти из системы</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
