@@ -151,25 +151,6 @@ class PersonalCabinetView(View):
         })
 
 
-class BookServiceView(View):
-    """
-    Представление для записи на обслуживание автомобиля.
-    """
-    def get(self, request):
-        return render(request, 'user_registration/book_service.html')
-
-    def post(scelf, request):
-        car_model = request.POST['car_model']
-        servie_date = request.POST['service_date']
-        service_time = request.POST['service_time']
-        additional_info = request.POST['additional_info']
-
-        # Здесь можно добавить логику сохранения записи на обслуживание в базу данных
-
-        messages.success(request, 'Вы успешно записались на обслуживание!')
-        return redirect('personal_cabinet')
-
-
 class ServiceAppointmentListView(APIView):
     """
     API представление для получения списка всех записей на обслуживание и создания новой записи.
