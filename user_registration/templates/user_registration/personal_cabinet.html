@@ -22,7 +22,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             width: 80%;
             max-width: 600px;
-            position: relative; /* Позволяет позиционировать дочерние элементы */
+            position: relative;
         }
         h2, h3 {
             text-align: center;
@@ -47,7 +47,7 @@
             padding: 10px;
             text-align: center;
             border-radius: 5px;
-            position: absolute; /* Позиционирование относительно контейнера */
+            position: absolute;
             top: 25px;
             right: 20px;
             cursor: default;
@@ -65,8 +65,7 @@
             cursor: pointer;
             font-size: 16px;
             text-decoration: none;
-            }
-        /* Стиль для ссылок регистрации и входа */
+        }
         .register-link, .login-link, .forum-link {
             background-color: rgba(255, 255, 255, 0.7);
             color: black;
@@ -74,17 +73,17 @@
             border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
-            margin-bottom: 10px;  /* Добавляем отступ снизу */
-            display: block;  /* Делаем элемент блочным, чтобы они были в столбик */
-            text-align: center;  /* Выравниваем текст по центру */
+            margin-bottom: 10px;
+            display: block;
+            text-align: center;
         }
         .forum-link {
             position: fixed;
             top: 67px;
             right: 20px;
             display: flex;
-            flex-direction: column;  /* Делаем расположение кнопок в столбик */
-            align-items: flex-end;  /* Выравниваем кнопки справа */
+            flex-direction: column;
+            align-items: flex-end;
         }
         .logout {
             background: red;
@@ -109,12 +108,28 @@
     <div class="container">
         <h2>Личный кабинет</h2>
 
-
         {% if discount %}
             <p>Текущая скидка: {{ discount.calculate_discount }}%</p>
         {% else %}
             <p>У вас нет доступных скидок.</p>
         {% endif %}
+
+        <h3>Записи на обслуживание</h3>
+<ul>
+    {% if appointments %}
+        {% for appointment in appointments|slice:":2" %}
+            <li>
+                Модель автомобиля: {{ appointment.car_model }}<br>
+                Дата обслуживания: {{ appointment.service_date }}<br>
+                Время обслуживания: {{ appointment.service_time }}<br>
+                Заключение по результатам проверки: {{ appointment.additional_info|default:"Нет" }}
+            </li>
+        {% endfor %}
+    {% else %}
+        <li>У вас нет записей на обслуживание.</li>
+    {% endif %}
+</ul>
+
 
         <h3>Информация о хранении шин</h3>
         <ul>
@@ -133,4 +148,5 @@
         </div>
     </div>
 </body>
+</html>
 </html>
