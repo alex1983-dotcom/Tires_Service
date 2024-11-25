@@ -127,38 +127,28 @@ class PersonalCabinetView(View):
     """
     Представление для отображения личного кабинета пользователя.
     """
+
     def get(self, request):
         user = request.user
+
+        # Получаем скидку пользователя, если она есть
         try:
             discount = Discount.objects.get(user=user)
         except Discount.DoesNotExist:
             discount = None
 
+        # Получаем записи на обслуживание для текущего пользователя, сортируем по дате и берем последние две
+        appointments = ServiceAppointment.objects.filter(user=user).order_by('-service_date')[:2]
+
+        # Получаем информацию о хранении шин
         tire_storages = TireStorage.objects.filter(user=user)
+
         return render(request, 'user_registration/personal_cabinet.html', {
             'user': user,
             'discount': discount,
-            'tire_storages': tire_storages
+            'tire_storages': tire_storages,
+            'appointments': appointments,  # Передаем последние две записи на обслуживание в контекст
         })
-
-
-class BookServiceView(View):
-    """
-    Представление для записи на обслуживание автомобиля.
-    """
-    def get(self, request):
-        return render(request, 'user_registration/book_service.html')
-
-    def post(self, request):
-        car_model = request.POST['car_model']
-        service_date = request.POST['service_date']
-        service_time = request.POST['service_time']
-        additional_info = request.POST['additional_info']
-
-        # Здесь можно добавить логику сохранения записи на обслуживание в базу данных
-
-        messages.success(request, 'Вы успешно записались на обслуживание!')
-        return redirect('personal_cabinet')
 
 
 class ServiceAppointmentListView(APIView):

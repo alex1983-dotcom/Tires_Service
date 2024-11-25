@@ -25,7 +25,6 @@ from user_registration.views import (
     RegisterView,
     LoginView,
     PersonalCabinetView,
-    BookServiceView,
     ServiceAppointmentListView,
     ServiceAppointmentDetailView,
     UserListView,
@@ -44,7 +43,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='home_page'), name='logout'),  # Выход из системы
     path('personal_cabinet/', PersonalCabinetView.as_view(), name='personal_cabinet'),  # Личный кабинет
     path('register/', RegisterView.as_view(), name='register'),  # Регистрация
-    path('book_service/', BookServiceView.as_view(), name='book_service'),  # Запись на обслуживание
     path('appointments/', ServiceAppointmentListView.as_view(), name='appointment-list'),  # Список записей на обслуживание
     path('appointments/<int:pk>/', ServiceAppointmentDetailView.as_view(), name='appointment-detail'),  # Детали записи на обслуживание
     path('users/', UserListView.as_view(), name='user-list'),  # Список пользователей
