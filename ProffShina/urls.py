@@ -38,6 +38,7 @@ urlpatterns = [
     path('user/', include('user_registration.urls')),  # Маршруты приложения регистрации пользователей
     path('api/', include('user_registration.urls_api')),  # Маршруты API для пользователей и записей на обслуживание
     path('forum/', include('forum.urls')),  # Маршруты приложения форума
+    path('api/', include('forum.urls_api')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),  # Обработка медиа-файлов
     path('login/', LoginView.as_view(), name='login'),  # Вход в систему
     path('logout/', auth_views.LogoutView.as_view(next_page='home_page'), name='logout'),  # Выход из системы
