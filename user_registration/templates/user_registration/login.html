@@ -65,6 +65,18 @@
             cursor: pointer;  /* Указатель курсора при наведении */
             font-size: 16px;  /* Размер шрифта кнопки */
         }
+        /* Стилизация для кнопки "Забыли пароль?" */
+        .forgot-password {
+            text-align: right;  /* Выравнивание текста по правому краю */
+            margin-top: 10px;  /* Верхний отступ */
+        }
+        .forgot-password a {
+            color: white;  /* Белый цвет текста ссылки */
+            text-decoration: none;  /* Убирает подчеркивание текста */
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;  /* Добавляет подчеркивание текста при наведении */
+        }
         /* Стилизация для кнопки "Назад на главную" при наведении */
         .back-button:hover {
             background: darkgray;  /* Темно-серый фон кнопки при наведении */
@@ -92,6 +104,10 @@
             <!-- Кнопка для отправки формы -->
             <button type="submit">Войти</button>
         </form>
+        <!-- Ссылка "Забыли пароль?" -->
+        <div class="forgot-password">
+            <a href="{% url 'password_reset_request' %}">Забыли пароль?</a>
+        </div>
         <!-- Блок для отображения сообщений -->
         {% if messages %}
             <div>

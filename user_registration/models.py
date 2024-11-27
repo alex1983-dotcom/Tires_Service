@@ -140,3 +140,21 @@ class ServiceAppointment(models.Model):
 
     def __str__(self):
         return f"Запись на {self.service_date} {self.service_time} для {self.user.username}"
+
+from django.db import models
+from django.utils import timezone
+
+class PasswordResetCode(models.Model):
+    phone_number = models.CharField(max_length=15)  # Номер телефона пользователя
+    code = models.CharField(max_length=6)  # Код сброса пароля
+    expiry_date = models.DateTimeField()  # Срок действия кода
+
+    def is_valid(self):
+        """
+        Проверяет, действителен ли код сброса пароля.
+        """
+        return self.expiry_date >= timezone.now()
+
+    def __str__(self):
+        return f"Password reset code for {self.phone_number}"
+

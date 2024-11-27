@@ -8,12 +8,22 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.decorators import login_required
-from django.utils.crypto import get_random_string
+from .forms import PasswordResetRequestForm, PasswordResetConfirmForm
 from .forms import UserRegistrationForm
 from .models import Discount, TireStorage, ServiceAppointment, User
 from .serializers import UserSerializer
 from .forms import AdminEmailAuthenticationForm
 from django.utils.decorators import method_decorator
+from dotenv import load_dotenv
+from django.utils.crypto import get_random_string
+from django.utils import timezone
+import os
+from twilio.rest import Client
+from .models import PasswordResetCode
+
+
+# Переменные окружения из файла .env
+load_dotenv()
 
 
 def send_welcome_email(user_email):
@@ -122,6 +132,74 @@ class LoginView(View):
         return render(request, 'user_registration/login.html')
 
 
+class PasswordResetRequestView(View):
+    """
+    Представление для запроса сброса пароля.
+    """
+    def get(self, request):
+        form = PasswordResetRequestForm()
+        return render(request, 'user_registration/password_reset_request.html', {'form': form})
+
+    def post(self, request):
+        form = PasswordResetRequestForm(request.POST)
+        if form.is_valid():
+            phone_number = form.cleaned_data['phone_number']
+            # Генерируем код и отправляем SMS
+            code = get_random_string(length=6, allowed_chars='0123456789')
+            expiry_date = timezone.now() + timezone.timedelta(minutes=10)
+            PasswordResetCode.objects.create(phone_number=phone_number, code=code, expiry_date=expiry_date)
+            self.send_sms(phone_number, f"Ваш код для сброса пароля: {code}")
+            messages.success(request, 'Код для сброса пароля отправлен на ваш номер телефона.')
+            return redirect('password_reset_confirm')
+        return render(request, 'user_registration/password_reset_request.html', {'form': form})
+
+    def send_sms(self, phone_number, message):
+        account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+        auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+        client = Client(account_sid, auth_token)
+        from_number = '+14128378357'  # Ваш номер, зарегистрированный в Twilio
+
+        if not from_number.startswith('+1'):
+            raise ValueError("Ваш номер (from_) должен начинаться с +1 и быть зарегистрирован в Twilio")
+
+        if not phone_number.startswith('+'):
+            raise ValueError("Номер получателя (to) должен быть в международном формате, начиная с +")
+
+        client.messages.create(
+            body=message,
+            from_=from_number,
+            to=phone_number
+        )
+
+
+class PasswordResetConfirmView(View):
+    """
+    Представление для подтверждения кода и ввода нового пароля.
+    """
+    def get(self, request):
+        form = PasswordResetConfirmForm()
+        return render(request, 'user_registration/password_reset_confirm.html', {'form': form})
+
+    def post(self, request):
+        form = PasswordResetConfirmForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+
+            reset_code = PasswordResetCode.objects.filter(code=code, expiry_date__gte=timezone.now()).first()
+            if reset_code and reset_code.is_valid():
+                user = User.objects.get(phone_number=reset_code.phone_number)
+                user.set_password(password1)
+                user.save()
+                reset_code.delete()
+                messages.success(request, 'Ваш пароль успешно изменен.')
+                return redirect('login')
+            else:
+                messages.error(request, 'Неверный или истекший код подтверждения.')
+        return render(request, 'user_registration/password_reset_confirm.html', {'form': form})
+
+
 @method_decorator(login_required, name='dispatch')
 class PersonalCabinetView(View):
     """
@@ -177,6 +255,7 @@ class ServiceAppointmentListView(APIView):
         appointment.save()
         return Response({'status': 'Запись создана'}, status=status.HTTP_201_CREATED)
 
+
 class ServiceAppointmentDetailView(APIView):
     """
     API представление для получения информации о конкретной записи на обслуживание и её удаления.
@@ -201,6 +280,7 @@ class ServiceAppointmentDetailView(APIView):
         except ServiceAppointment.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 class UserListView(APIView):
     """
     API представление для получения списка всех пользователей.
@@ -209,6 +289,7 @@ class UserListView(APIView):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
+
 
 class UserDetailView(APIView):
     """

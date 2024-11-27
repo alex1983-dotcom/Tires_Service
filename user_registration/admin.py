@@ -2,6 +2,12 @@ from django.contrib import admin
 from user_registration.models import User, Discount, TireStorage, ServiceAppointment
 from django.utils.crypto import get_random_string
 from twilio.rest import Client  # Импорт Twilio для отправки SMS
+from dotenv import load_dotenv
+import os
+from django.conf import settings
+
+# Загружаем переменные окружения из файла .env
+load_dotenv()
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -30,16 +36,24 @@ class UserAdmin(admin.ModelAdmin):
         """
         Функция для отправки SMS-сообщений с использованием сервиса Twilio.
         """
-        account_sid = 'ACed36e0db4aac8d4e6394ed59722b0855'  # Замените на ваш SID аккаунта
-        auth_token = '17dc23687e36b441548676998d1107c6'  # Замените на ваш токен аутентификации
+        account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+        auth_token = os.getenv('TWILIO_AUTH_TOKEN')
         client = Client(account_sid, auth_token)
+
+        # Убедитесь, что номера в международном формате с кодом страны
+        from_number = '+14128378357'  # Ваш номер, зарегистрированный в Twilio
+
+        if not from_number.startswith('+1'):
+            raise ValueError("Ваш номер (from_) должен начинаться с +1 и быть зарегистрирован в Twilio")
+
+        if not phone_number.startswith('+'):
+            raise ValueError("Номер получателя (to) должен быть в международном формате, начиная с +")
 
         client.messages.create(
             body=message,
-            from_='+14128378357',  # Ваш номер, зарегистрированный в Twilio
+            from_=from_number,
             to=phone_number
         )
-
 
 admin.site.register(User, UserAdmin)
 

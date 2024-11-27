@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class Category(models.Model):
     """
     Модель для представления категории на форуме.
@@ -13,6 +14,7 @@ class Category(models.Model):
         Возвращает строковое представление категории.
         """
         return self.name
+
 
 class Thread(models.Model):
     """
@@ -28,6 +30,7 @@ class Thread(models.Model):
         Возвращает строковое представление темы.
         """
         return self.title
+
 
 class Post(models.Model):
     """
