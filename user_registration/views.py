@@ -18,9 +18,8 @@ from dotenv import load_dotenv
 from django.utils.crypto import get_random_string
 from django.utils import timezone
 import os
-from twilio.rest import Client
 from .models import PasswordResetCode
-
+import requests
 
 # Переменные окружения из файла .env
 load_dotenv()
@@ -154,22 +153,30 @@ class PasswordResetRequestView(View):
         return render(request, 'user_registration/password_reset_request.html', {'form': form})
 
     def send_sms(self, phone_number, message):
-        account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-        auth_token = os.getenv('TWILIO_AUTH_TOKEN')
-        client = Client(account_sid, auth_token)
-        from_number = '+14128378357'  # Ваш номер, зарегистрированный в Twilio
+        """
+        Функция для отправки SMS - сообщений с использованием API МТС.
+        """
+        mts_api_url = 'https://api.mts.by/sms/send' # заменить на реальный URL
+        account_sid = os.getenv('MTS_ACCOUNT_SID')
+        auth_token = os.getenv('MTS_AUTH_TOKEN')
 
-        if not from_number.startswith('+1'):
-            raise ValueError("Ваш номер (from_) должен начинаться с +1 и быть зарегистрирован в Twilio")
+        payload = {
+            'account_sid': account_sid,
+            'auth_token': auth_token,
+            'to':phone_number,
+            'body': message
+        }
 
-        if not phone_number.startswith('+'):
-            raise ValueError("Номер получателя (to) должен быть в международном формате, начиная с +")
+        headers = {
+            'Content-Type': 'application/json',
+        }
 
-        client.messages.create(
-            body=message,
-            from_=from_number,
-            to=phone_number
-        )
+        response = requests.post(mts_api_url, json=payload, headers=headers)
+
+        if response.status_code == 200:
+            print("SMS успешно отправлено")
+        else:
+            print(f"Ошибка при отправке SMS: {response.status_code} - {response.text}")
 
 
 class PasswordResetConfirmView(View):
