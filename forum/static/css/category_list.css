@@ -49,7 +49,7 @@ body {
 }
 
 .status-button {
-    background: {{ user.is_authenticated|yesno:"green,red" }};
+    background: {% if user.is_authenticated %}green{% else %}red{% endif %};
     color: white;
     padding: 10px;
     text-align: center;
@@ -60,6 +60,7 @@ body {
     cursor: default;
     font-size: 10px;
 }
+
 
 /* Стили для кнопки "Назад" */
 .back-button {

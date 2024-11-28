@@ -1,4 +1,3 @@
-<!-- home_page.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,14 +7,14 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/home_page_forum.css' %}">
 </head>
-<div class="status-button">
+<body>
+    <div class="status-button" style="background-color: {% if user.is_authenticated %}green{% else %}red{% endif %};">
         {% if user.is_authenticated %}
             Вы вошли в систему {{ request.user.first_name }} {{ request.user.last_name }}
         {% else %}
             Вы не аутентифицированы
         {% endif %}
     </div>
-<body>
     <a href="{% url 'home_page' %}" class="back-button">Покинуть форум</a>
     <div class="home-page">
         <h2>Добро пожаловать на форум ProffShina</h2>

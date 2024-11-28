@@ -1,4 +1,3 @@
-<!-- category_list.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,14 +7,14 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/category_list.css' %}">
 </head>
-    <div class="status-button">
+<body>
+    <div class="status-button" style="background-color: {% if user.is_authenticated %}green{% else %}red{% endif %};">
         {% if user.is_authenticated %}
             Вы вошли в систему {{ request.user.first_name }} {{ request.user.last_name }}
         {% else %}
             Вы не аутентифицированы
         {% endif %}
     </div>
-<body>
     <a href="{% url 'forum_home_page' %}" class="back-button">Назад на главную</a>
     <div class="container">
         <h2>Категории</h2>

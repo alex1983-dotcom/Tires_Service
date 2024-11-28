@@ -1,4 +1,3 @@
-<!-- post_list.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -7,89 +6,77 @@
     <title>Сообщения - Форум ProffShina</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/post_list.css' %}">
-
-    <!-- Основной HTML-код -->
-    <body>
-        <div class="status-button">
+</head>
+<body>
+    <div class="status-button" style="background-color: {% if user.is_authenticated %}green{% else %}red{% endif %};">
         {% if user.is_authenticated %}
             Вы вошли в систему {{ request.user.first_name }} {{ request.user.last_name }}
         {% else %}
             Вы не аутентифицированы
         {% endif %}
+    </div>
+    <a href="{% url 'forum_home_page' %}" class="back-button">Назад на главную</a>
+    <div class="container">
+        <div class="thread-title">
+            <h2>Сообщения по теме: {{ thread.title }}</h2>
         </div>
-        <!-- Кнопка "Назад на главную" -->
-        <a href="{% url 'forum_home_page' %}" class="back-button">Назад на главную</a>
-        <div class="container">
-            <!-- Заголовок темы -->
-            <div class="thread-title">
-                <h2>Сообщения по теме: {{ thread.title }}</h2>
-            </div>
-            <!-- Список сообщений -->
-            <ul class="message-list">
-                {% for post in posts %}
-                    <li class="message-item">
-                        <div class="message">
-                            <!-- Содержимое сообщения -->
-                            <p>{{ post.message }}</p>
-                        </div>
-                        <!-- Информация об авторе и дате -->
-                        <div class="message-info">
-                            <p>Автор: {{ post.created_by.username }}</p>
-                            <p>Дата: {{ post.created_at }}</p>
-                        </div>
-                        <!-- Кнопка "Ответить" -->
-                        {% if user.is_authenticated %}
-                        <button class="reply-button" data-post-id="{{ post.id }}">Ответить</button>
-                        <!-- Форма ответа -->
-                        <div class="reply-form" id="reply-form-{{ post.id }}">
-                            <form action="{% url 'post_list' thread.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="parent_id" value="{{ post.id }}">
-                                <textarea name="content" rows="2" cols="50" placeholder="Напишите ваш ответ здесь..."></textarea>
-                                <button type="submit" class="button">Отправить</button>
-                            </form>
-                        </div>
-                        {% endif %}
-                        <!-- Ответы на сообщение -->
-                        {% for reply in post.replies.all %}
-                            <div class="reply">
-                                <p>{{ reply.message }}</p>
-                                <div class="message-info">
-                                    <p>Автор: {{ reply.created_by.username }}</p>
-                                    <p>Дата: {{ reply.created_at }}</p>
-                                </div>
+        <ul class="message-list">
+            {% for post in posts %}
+                <li class="message-item">
+                    <div class="message">
+                        <p>{{ post.message }}</p>
+                    </div>
+                    <div class="message-info">
+                        <p>Автор: {{ post.created_by.username }}</p>
+                        <p>Дата: {{ post.created_at }}</p>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <button class="reply-button" data-post-id="{{ post.id }}">Ответить</button>
+                    <div class="reply-form" id="reply-form-{{ post.id }}">
+                        <form action="{% url 'post_list' thread.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="parent_id" value="{{ post.id }}">
+                            <textarea name="content" rows="2" cols="50" placeholder="Напишите ваш ответ здесь..."></textarea>
+                            <button type="submit" class="button">Отправить</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    {% for reply in post.replies.all %}
+                        <div class="reply">
+                            <p>{{ reply.message }}</p>
+                            <div class="message-info">
+                                <p>Автор: {{ reply.created_by.username }}</p>
+                                <p>Дата: {{ reply.created_at }}</p>
                             </div>
-                        {% endfor %}
-                    </li>
-                {% endfor %}
-            </ul>
-            <!-- Форма нового сообщения -->
-            {% if user.is_authenticated %}
-            <form action="{% url 'post_list' thread.id %}" method="post">
-                {% csrf_token %}
-                <textarea name="content" rows="4" cols="50" placeholder="Напишите ваше сообщение здесь..."></textarea>
-                <button type="submit" class="button">Отправить</button>
-            </form>
-            {% else %}
-            <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставлять сообщения.</p>
-            {% endif %}
-        </div>
+                        </div>
+                    {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+        {% if user.is_authenticated %}
+        <form action="{% url 'post_list' thread.id %}" method="post">
+            {% csrf_token %}
+            <textarea name="content" rows="4" cols="50" placeholder="Напишите ваше сообщение здесь..."></textarea>
+            <button type="submit" class="button">Отправить</button>
+        </form>
+        {% else %}
+        <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставлять сообщения.</p>
+        {% endif %}
+    </div>
 
-        <!-- Скрипт для отображения/скрытия формы ответа -->
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Находим все кнопки с классом "reply-button" и добавляем обработчик событий на клик
-                document.querySelectorAll('.reply-button').forEach(button => {
-                    button.addEventListener('click', function(event) {
-                        event.preventDefault();
-                        const postId = this.getAttribute('data-post-id');
-                        const replyForm = document.getElementById(`reply-form-${postId}`);
-                        if (replyForm) {
-                            replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
-                        }
-                    });
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.reply-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const postId = this.getAttribute('data-post-id');
+                    const replyForm = document.getElementById(`reply-form-${postId}`);
+                    if (replyForm) {
+                        replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+                    }
                 });
             });
-        </script>
-    </body>
+        });
+    </script>
+</body>
 </html>
