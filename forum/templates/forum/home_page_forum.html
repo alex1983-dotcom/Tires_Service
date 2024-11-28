@@ -5,81 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная - Форум ProffShina</title>
-    <style>
-        /* Общие стили */
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url('/media/колесо.jpg');
-            background-size: cover;
-            color: white;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Стили для контейнера */
-        .home-page {
-            text-align: center;
-            margin-top: 50px;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Стили для списка ссылок */
-        .home-page ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .home-page li {
-            margin-bottom: 10px;
-        }
-
-        /* Стили для ссылок */
-        .home-page a {
-            font-size: 20px;
-            text-decoration: none;
-            color: #007bff;
-            background-color: #d3d3d3; /* Светло-серый фон */
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .home-page a:hover {
-            background-color: #c0c0c0;
-            text-decoration: underline;
-        }
-            .status-button {
-            background: {{ user.is_authenticated|yesno:"green,red" }};
-            color: white;
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            position: absolute; /* Позиционирование относительно контейнера */
-            top: 25px;
-            right: 20px;
-            cursor: default;
-            font-size: 10px;
-        }
-
-        /* Стили для кнопки "Назад" */
-        .back-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            text-decoration: none;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home_page_forum.css' %}">
 </head>
 <div class="status-button">
         {% if user.is_authenticated %}
