@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить в корзину</title>
+    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+    <h1>Добавить в корзину</h1>
+    <form action="{% url 'add-to-cart' product.id %}" method="post">
+        {% csrf_token %}
+        <label for="quantity">Количество:</label>
+        <input type="number" id="quantity" name="quantity" min="1" value="1">
+        <button type="submit">Добавить</button>
+    </form>
+    <p><a href="{% url 'product-list' %}">Назад к списку товаров</a></p>
+</body>
+</html>

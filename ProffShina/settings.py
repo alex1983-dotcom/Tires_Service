@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'content',
     'user_registration',
     'forum',
+    'shop',
 ]
 
 MIDDLEWARE = [

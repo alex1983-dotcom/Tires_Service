@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>{{ home_page.title }}</title>
     <style>
         /* Определяем стиль для всего тела страницы */
@@ -129,7 +130,7 @@
             Вы не аутентифицированы
         {% endif %}
     </div>
-<div class="sidebar">
+    <div class="sidebar">
         <h3>Рубрики</h3>
         <ul>
             <!-- Проходимся по всем категориям и создаем ссылки -->
@@ -162,6 +163,7 @@
             <a href="{% url 'login' %}" class="login-link">Вход в личный кабинет</a>
         {% endif %}
         <a href="{% url 'category_list' %}" class="forum-link">Перейти на форум</a> <!-- Новая кнопка для форума -->
+        <a href="{% url 'category-list' %}" class="shop-link">Перейти в магазин</a> <!-- Новая кнопка для магазина -->
     </div>
 </body>
 </html>
