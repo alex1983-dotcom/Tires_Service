@@ -6,8 +6,10 @@ from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from django.conf import settings
 
+
 def markdown_to_html(text):
     return markdown.markdown(text)
+
 
 class HomePageView(View):
     """
@@ -32,6 +34,7 @@ class HomePageView(View):
         except Exception as e:
             return render(request, 'content/error.html', {'message': str(e)})
 
+
 class CategoryArticlesView(View):
     """
     Отображение статей в определенной категории.
@@ -52,6 +55,7 @@ class CategoryArticlesView(View):
             return render(request, 'content/error.html', {'message': 'Категория не найдена'})
         except Exception as e:
             return render(request, 'content/error.html', {'message': str(e)})
+
 
 class ArticleDetailView(View):
     """

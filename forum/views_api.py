@@ -17,7 +17,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def retrieve_with_exception_handling(self, request, pk=None):
         """
-        Обработчик GET-запросов с обработкой исключений.
+        Обработчик GET-запросов
         """
         try:
             category = self.get_object()
@@ -39,7 +39,7 @@ class ThreadViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def retrieve_with_exception_handling(self, request, pk=None):
         """
-        Обработчик GET-запросов с обработкой исключений.
+        Обработчик GET-запросов
         """
         try:
             thread = self.get_object()
@@ -61,7 +61,7 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def retrieve_with_exception_handling(self, request, pk=None):
         """
-        Обработчик GET-запросов с обработкой исключений.
+        Обработчик GET-запросов
         """
         try:
             post = self.get_object()
@@ -74,7 +74,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         """
-        Обработчик POST-запросов для создания сообщения с обработкой исключений.
+        Обработчик POST-запросов для создания сообщения
         """
         try:
             response = super().create(request, *args, **kwargs)

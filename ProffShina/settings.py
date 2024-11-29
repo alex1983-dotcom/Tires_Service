@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -178,10 +178,11 @@ LOGGING = {
 # EMAIL_HOST_PASSWORD = 'myanna_777_cng'
 
 
-# Установим консольный почтовый бэкенд для разработки
+# Консольный почтовый бэкенд для разработки
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 
+# Настройка Django REST Framework.
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -193,8 +194,8 @@ REST_FRAMEWORK = {
     ),
 }
 
-from datetime import timedelta
 
+# Настройка JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
