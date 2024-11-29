@@ -23,13 +23,16 @@ class UserAdmin(admin.ModelAdmin):
         """
         Переопределяем метод save_model, чтобы сгенерировать пароль и отправить SMS при создании пользователя.
         """
-        if not change:  # Только при создании нового пользователя
-            raw_password = get_random_string(length=8)
-            obj.set_password(raw_password)
-            obj.save()
-            self.send_sms(obj.phone_number, f"Ваш новый пароль: {raw_password}")
-        else:
-            super().save_model(request, obj, form, change)
+        try:
+            if not change:  # Только при создании нового пользователя
+                raw_password = get_random_string(length=8)
+                obj.set_password(raw_password)
+                obj.save()
+                self.send_sms(obj.phone_number, f"Ваш новый пароль: {raw_password}")
+            else:
+                super().save_model(request, obj, form, change)
+        except Exception as e:
+            print(f"Ошибка при сохранении модели пользователя: {e}")
 
     def send_sms(self, phone_number, message):
         """
@@ -50,12 +53,14 @@ class UserAdmin(admin.ModelAdmin):
             'Content-Type': 'application/json',
         }
 
-        response = requests.post(mts_api_url, json=payload, headers=headers)
-
-        if response.status_code == 200:
-            print("SMS успешно отправлено")
-        else:
-            print(f"Ошибка при отправке SMS: {response.status_code} - {response.text}")
+        try:
+            response = requests.post(mts_api_url, json=payload, headers=headers)
+            if response.status_code == 200:
+                print("SMS успешно отправлено")
+            else:
+                print(f"Ошибка при отправке SMS: {response.status_code} - {response.text}")
+        except requests.RequestException as e:
+            print(f"Ошибка при отправке SMS: {e}")
 
 
 admin.site.register(User, UserAdmin)
@@ -88,9 +93,9 @@ class DiscountAdmin(admin.ModelAdmin):
         """
         return obj.user.phone_number
 
-    user_full_name.short_description = 'Full Name'
+    user_full_name.short_description = 'Полное имя'
     user_email.short_description = 'Email'
-    user_phone_number.short_description = 'Phone Number'
+    user_phone_number.short_description = 'Номер телефона'
 
 
 admin.site.register(Discount, DiscountAdmin)
@@ -117,8 +122,8 @@ class TireStorageAdmin(admin.ModelAdmin):
         """
         return obj.user.phone_number
 
-    user_full_name.short_description = 'Full Name'
-    user_phone_number.short_description = 'Phone Number'
+    user_full_name.short_description = 'Полное имя'
+    user_phone_number.short_description = 'Номер телефона'
 
 
 admin.site.register(TireStorage, TireStorageAdmin)
@@ -145,8 +150,7 @@ class ServiceAppointmentAdmin(admin.ModelAdmin):
         """
         return obj.user.phone_number
 
-    user_full_name.short_description = 'Full Name'
-    user_phone_number.short_description = 'Phone Number'
-
+    user_full_name.short_description = 'Полное имя'
+    user_phone_number.short_description = 'Номер телефона'
 
 admin.site.register(ServiceAppointment, ServiceAppointmentAdmin)

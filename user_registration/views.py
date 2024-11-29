@@ -1,12 +1,6 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.conf import settings
-from django.views import View
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView  # Импортируем APIView
 from django.contrib.auth.decorators import login_required
 from .forms import PasswordResetRequestForm, PasswordResetConfirmForm
 from .forms import UserRegistrationForm
@@ -20,6 +14,12 @@ from django.utils import timezone
 import os
 from .models import PasswordResetCode
 import requests
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib.auth import login, authenticate
 
 # Переменные окружения из файла .env
 load_dotenv()
@@ -28,6 +28,9 @@ load_dotenv()
 def send_welcome_email(user_email):
     """
     Отправляет приветственное письмо новому пользователю.
+
+    Args:
+        user_email (str): Электронная почта пользователя.
     """
     subject = 'Добро пожаловать на ProffShina!'
     message = 'Спасибо за регистрацию на нашем сайте!'
@@ -37,11 +40,33 @@ def send_welcome_email(user_email):
 
 
 class AdminLoginView(View):
+    """
+    Представление для входа администратора в систему.
+    """
+
     def get(self, request):
+        """
+        Отображает форму входа для администратора.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            HttpResponse: Ответ с формой входа.
+        """
         form = AdminEmailAuthenticationForm()
         return render(request, 'admin/login.html', {'form': form})
 
     def post(self, request):
+        """
+        Обрабатывает POST-запрос для входа администратора.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            HttpResponse: Ответ с результатом входа.
+        """
         form = AdminEmailAuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
@@ -57,11 +82,14 @@ class RegisterView(View):
     """
     Представление для регистрации пользователя.
     """
+
     def get(self, request):
         """
-        Обрабатывает GET-запрос для отображения формы регистрации.
+        Отображает форму регистрации.
+
         Args:
             request (HttpRequest): Объект запроса.
+
         Returns:
             HttpResponse: Ответ с формой регистрации.
         """
@@ -71,8 +99,10 @@ class RegisterView(View):
     def post(self, request):
         """
         Обрабатывает POST-запрос для регистрации нового пользователя.
+
         Args:
             request (HttpRequest): Объект запроса.
+
         Returns:
             HttpResponse: Ответ с результатом регистрации.
         """
@@ -83,6 +113,7 @@ class RegisterView(View):
                 raw_password = form.cleaned_data.get('password1')
                 user.set_password(raw_password)  # Устанавливаем пароль пользователя
                 user.save()
+
                 # Аутентификация пользователя после регистрации
                 user = authenticate(username=user.phone_number, password=raw_password)
                 if user is not None:
@@ -102,11 +133,14 @@ class LoginView(View):
     """
     Представление для входа пользователя в систему.
     """
+
     def get(self, request):
         """
-        Обрабатывает GET-запрос для отображения формы входа.
+        Отображает форму входа.
+
         Args:
             request (HttpRequest): Объект запроса.
+
         Returns:
             HttpResponse: Ответ с формой входа.
         """
@@ -115,8 +149,10 @@ class LoginView(View):
     def post(self, request):
         """
         Обрабатывает POST-запрос для аутентификации пользователя.
+
         Args:
             request (HttpRequest): Объект запроса.
+
         Returns:
             HttpResponse: Ответ с результатом аутентификации.
         """
@@ -135,11 +171,30 @@ class PasswordResetRequestView(View):
     """
     Представление для запроса сброса пароля.
     """
+
     def get(self, request):
+        """
+        Отображает форму запроса сброса пароля.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            HttpResponse: Ответ с формой запроса сброса пароля.
+        """
         form = PasswordResetRequestForm()
         return render(request, 'user_registration/password_reset_request.html', {'form': form})
 
     def post(self, request):
+        """
+        Обрабатывает POST-запрос для запроса сброса пароля.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            HttpResponse: Ответ с результатом запроса сброса пароля.
+        """
         form = PasswordResetRequestForm(request.POST)
         if form.is_valid():
             phone_number = form.cleaned_data['phone_number']
@@ -154,16 +209,20 @@ class PasswordResetRequestView(View):
 
     def send_sms(self, phone_number, message):
         """
-        Функция для отправки SMS - сообщений с использованием API МТС.
+        Функция для отправки SMS-сообщений с использованием API МТС.
+
+        Args:
+            phone_number (str): Номер телефона получателя.
+            message (str): Текст сообщения.
         """
-        mts_api_url = 'https://api.mts.by/sms/send' # заменить на реальный URL
+        mts_api_url = 'https://api.mts.by/sms/send'  # заменить на реальный URL
         account_sid = os.getenv('MTS_ACCOUNT_SID')
         auth_token = os.getenv('MTS_AUTH_TOKEN')
 
         payload = {
             'account_sid': account_sid,
             'auth_token': auth_token,
-            'to':phone_number,
+            'to': phone_number,
             'body': message
         }
 
@@ -171,23 +230,42 @@ class PasswordResetRequestView(View):
             'Content-Type': 'application/json',
         }
 
-        response = requests.post(mts_api_url, json=payload, headers=headers)
-
-        if response.status_code == 200:
+        try:
+            response = requests.post(mts_api_url, json=payload, headers=headers)
+            response.raise_for_status()  # Проверяем на наличие ошибок
             print("SMS успешно отправлено")
-        else:
-            print(f"Ошибка при отправке SMS: {response.status_code} - {response.text}")
+        except requests.exceptions.RequestException as e:
+            print(f"Ошибка при отправке SMS: {e}")
 
 
 class PasswordResetConfirmView(View):
     """
     Представление для подтверждения кода и ввода нового пароля.
     """
+
     def get(self, request):
+        """
+        Отображает форму для ввода нового пароля.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            HttpResponse: Ответ с формой для ввода нового пароля.
+        """
         form = PasswordResetConfirmForm()
         return render(request, 'user_registration/password_reset_confirm.html', {'form': form})
 
     def post(self, request):
+        """
+        Обрабатывает POST-запрос для подтверждения кода и изменения пароля.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            HttpResponse: Ответ с результатом изменения пароля.
+        """
         form = PasswordResetConfirmForm(request.POST)
         if form.is_valid():
             code = form.cleaned_data['code']
@@ -195,13 +273,16 @@ class PasswordResetConfirmView(View):
             password2 = form.cleaned_data['password2']
 
             reset_code = PasswordResetCode.objects.filter(code=code, expiry_date__gte=timezone.now()).first()
-            if reset_code and reset_code.is_valid():
-                user = User.objects.get(phone_number=reset_code.phone_number)
-                user.set_password(password1)
-                user.save()
-                reset_code.delete()
-                messages.success(request, 'Ваш пароль успешно изменен.')
-                return redirect('login')
+            if reset_code:
+                try:
+                    user = User.objects.get(phone_number=reset_code.phone_number)
+                    user.set_password(password1)
+                    user.save()
+                    reset_code.delete()
+                    messages.success(request, 'Ваш пароль успешно изменен.')
+                    return redirect('login')
+                except User.DoesNotExist:
+                    messages.error(request, 'Пользователь не найден.')
             else:
                 messages.error(request, 'Неверный или истекший код подтверждения.')
         return render(request, 'user_registration/password_reset_confirm.html', {'form': form})
@@ -214,6 +295,15 @@ class PersonalCabinetView(View):
     """
 
     def get(self, request):
+        """
+        Отображает личный кабинет пользователя.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            HttpResponse: Ответ с данными личного кабинета.
+        """
         user = request.user
 
         # Получаем скидку пользователя, если она есть
@@ -240,7 +330,17 @@ class ServiceAppointmentListView(APIView):
     """
     API представление для получения списка всех записей на обслуживание и создания новой записи.
     """
+
     def get(self, request):
+        """
+        Получает список всех записей на обслуживание.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            Response: Ответ со списком записей на обслуживание.
+        """
         appointments = ServiceAppointment.objects.all()
         appointments_data = [{'user': appointment.user.username,
                               'car_model': appointment.car_model,
@@ -250,6 +350,15 @@ class ServiceAppointmentListView(APIView):
         return Response(appointments_data)
 
     def post(self, request):
+        """
+        Создает новую запись на обслуживание.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            Response: Ответ с результатом создания записи.
+        """
         user = request.user
         car_model = request.data.get('car_model')
         service_date = request.data.get('service_date')
@@ -267,7 +376,18 @@ class ServiceAppointmentDetailView(APIView):
     """
     API представление для получения информации о конкретной записи на обслуживание и её удаления.
     """
+
     def get(self, request, pk):
+        """
+        Получает информацию о конкретной записи на обслуживание.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+            pk (int): Идентификатор записи.
+
+        Returns:
+            Response: Ответ с данными записи или 404, если запись не найдена.
+        """
         try:
             appointment = ServiceAppointment.objects.get(pk=pk)
             appointment_data = {'user': appointment.user.username,
@@ -280,6 +400,16 @@ class ServiceAppointmentDetailView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, pk):
+        """
+        Удаляет запись на обслуживание по идентификатору.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+            pk (int): Идентификатор записи.
+
+        Returns:
+            Response: Ответ с статусом удаления или 404, если запись не найдена.
+        """
         try:
             appointment = ServiceAppointment.objects.get(pk=pk)
             appointment.delete()
@@ -292,7 +422,17 @@ class UserListView(APIView):
     """
     API представление для получения списка всех пользователей.
     """
+
     def get(self, request):
+        """
+        Получает список всех пользователей.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+
+        Returns:
+            Response: Ответ со списком пользователей.
+        """
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
@@ -302,7 +442,18 @@ class UserDetailView(APIView):
     """
     API представление для получения информации о конкретном пользователе и его удаления.
     """
+
     def get(self, request, pk):
+        """
+        Получает информацию о конкретном пользователе.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+            pk (int): Идентификатор пользователя.
+
+        Returns:
+            Response: Ответ с данными пользователя или 404, если пользователь не найден.
+        """
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
@@ -312,11 +463,19 @@ class UserDetailView(APIView):
         return Response(serializer.data)
 
     def delete(self, request, pk):
+        """
+        Удаляет пользователя по идентификатору.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+            pk (int): Идентификатор пользователя.
+
+        Returns:
+            Response: Ответ с статусом удаления или 404, если пользователь не найден.
+        """
         try:
             user = User.objects.get(pk=pk)
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-

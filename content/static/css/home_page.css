@@ -1,0 +1,137 @@
+/* Определяем стиль для всего тела страницы */
+body {
+    font-family: "Times New Roman", Times, serif;
+    line-height: 1.2;
+    background-image: url('../media/колесо.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Определяем стиль для контейнера страницы */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Стиль для заголовков */
+h1, h2, h3 {
+    line-height: 1.8;
+}
+
+/* Стиль для параграфов */
+p {
+    line-height: 1.5;
+    font-size: 18px;
+}
+
+/* Стиль для списков */
+ul, ol {
+    margin: 0.5em 0 0.5em 2em;
+}
+
+/* Стиль для элементов списка */
+li {
+    margin-bottom: 0.5em;
+}
+
+/* Стиль для боковой панели */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 25%;
+    height: 100%;
+    padding-right: 20px;
+    border-right: 1px solid #ccc;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    overflow: auto;
+}
+
+/* Стиль для ссылок в боковой панели */
+.sidebar a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Стиль для ссылок в боковой панели при наведении */
+.sidebar a:hover {
+    text-decoration: underline;
+}
+
+/* Стиль для содержимого */
+.content {
+    width: 50%;
+    margin: 5px auto;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Стиль для логотипа */
+.logo {
+    width: 50%;
+    height: auto;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+/* Стиль для ссылок регистрации и входа */
+.register-link, .login-link, .forum-link {
+    background-color: rgba(255, 255, 255, 0.7);
+    color: black;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 10px;  /* Добавляем отступ снизу */
+    display: block;  /* Делаем элемент блочным, чтобы они были в столбик */
+    text-align: center;  /* Выравниваем текст по центру */
+}
+
+/* Стиль для ссылок при наведении */
+.register-link:hover, .login-link:hover, .forum-link:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+/* Стиль для контейнера кнопок */
+.button-container {
+    position: fixed;
+    top: 67px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;  /* Делаем расположение кнопок в столбик */
+    align-items: flex-end;  /* Выравниваем кнопки справа */
+}
+
+.status-button {
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    position: absolute; /* Позиционирование относительно контейнера */
+    top: 25px;
+    right: 20px;
+    cursor: default;
+    font-size: 10px;
+}
+
+/* Стиль для дополнительной информации */
+.additional-info {
+    font-style: italic;  /* Наклонный шрифт */
+    color: lightgray;  /* Светло-серый цвет текста для большего контраста */
+}
+
+/* Стиль для основного содержимого */
+.main-content {
+    font-style: italic;  /* Наклонный шрифт */
+}
