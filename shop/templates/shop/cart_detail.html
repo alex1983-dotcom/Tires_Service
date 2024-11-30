@@ -2,20 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Ваша корзина</title>
+    <title>Корзина</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
 </head>
 <body>
     <h1>Ваша корзина</h1>
-    <ul>
-        {% for item in cart.items %}
-        <li>
-            {{ item.product.name }} (x{{ item.quantity }}) - {{ item.product.price }} руб. за штуку
-        </li>
-        {% endfor %}
-    </ul>
-    <p>Итоговая стоимость: {{ cart.total_price }} руб.</p>
-    <a href="{% url 'checkout' %}">Оформить заказ</a>
+    <form action="{% url 'update-cart' %}" method="post">
+        {% csrf_token %}
+        <ul>
+            {% for item in cart_items %}
+            <li>
+                {{ item.product.name }} - {{ item.product.price }} руб. за штуку
+                <input type="number" name="quantity_{{ item.id }}" value="{{ item.quantity }}" min="1">
+                <input type="hidden" name="item_id_{{ item.id }}" value="{{ item.id }}">
+            </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Обновить корзину</button>
+    </form>
+    <p>Итоговая стоимость: {{ total_price }} руб.</p>
+    <form action="{% url 'checkout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Оформить заказ</button>
+    </form>
+    <form action="{% url 'clear-cart' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Очистить корзину</button>
+    </form>
+    <a href="{% url 'category-list' %}">Вернуться к категориям</a>
 </body>
 </html>
+

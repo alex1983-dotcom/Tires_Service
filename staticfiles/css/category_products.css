@@ -1,0 +1,18 @@
+.product-image {
+    transition: transform 0.2s; /* Анимация перехода */
+}
+
+.product-image:hover {
+    transform: scale(1.5); /* Масштабируем изображение до 1.5 раза */
+}
+
+#notification {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+}

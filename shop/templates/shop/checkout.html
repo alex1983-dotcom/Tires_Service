@@ -4,21 +4,16 @@
     <meta charset="UTF-8">
     <title>Оформление заказа</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/checkout.css' %}">
 </head>
 <body>
     <h1>Оформление заказа</h1>
     <form action="{% url 'checkout' %}" method="post">
         {% csrf_token %}
+        <p>Ваше имя: <input type="text" name="name" required></p>
+        <p>Ваш адрес: <input type="text" name="address" required></p>
+        <p>Ваш телефон: <input type="text" name="phone" required></p>
         <button type="submit">Оформить заказ</button>
     </form>
-    <ul>
-        {% for item in cart_items %}
-        <li>
-            {{ item.product.name }} (x{{ item.quantity }}) - {{ item.product.price }} руб. за штуку
-        </li>
-        {% endfor %}
-    </ul>
-    <p>Итоговая стоимость: {{ total_price }} руб.</p>
 </body>
 </html>

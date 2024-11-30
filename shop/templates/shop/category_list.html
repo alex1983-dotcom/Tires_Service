@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Список категорий</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/category_products.css' %}">
 </head>
 <body>
     <h1>Категории товаров</h1>
@@ -16,6 +16,7 @@
         </li>
         {% endfor %}
     </ul>
+    <!-- Ссылка для возврата на главную страницу -->
+    <a href="{% url 'home_page' %}">Вернуться на главную страницу</a>
 </body>
 </html>
-

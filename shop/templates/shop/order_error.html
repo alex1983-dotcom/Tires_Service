@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <title>Ошибка оформления заказа</title>
+    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+    <h1>Ошибка оформления заказа</h1>
+    <p>Произошла ошибка при обработке вашего заказа. Пожалуйста, попробуйте снова позже.</p>
+    <p><strong>Ошибка:</strong> {{ error }}</p>
+    <a href="{% url 'cart-detail' %}">Вернуться к корзине</a>
+</body>
+</html>

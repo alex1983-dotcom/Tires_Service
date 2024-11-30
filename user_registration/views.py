@@ -78,6 +78,7 @@ class AdminLoginView(View):
         return render(request, 'admin/login.html', {'form': form})
 
 
+# Регистрация пользователя
 class RegisterView(View):
     """
     Представление для регистрации пользователя.
@@ -129,6 +130,7 @@ class RegisterView(View):
         return render(request, 'user_registration/register.html', {'form': form})
 
 
+# Вход в систему
 class LoginView(View):
     """
     Представление для входа пользователя в систему.
@@ -167,6 +169,7 @@ class LoginView(View):
         return render(request, 'user_registration/login.html')
 
 
+# Запрос сброса пароля
 class PasswordResetRequestView(View):
     """
     Представление для запроса сброса пароля.

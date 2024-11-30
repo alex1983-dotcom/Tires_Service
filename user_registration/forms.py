@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import User
 
+
 class PasswordResetRequestForm(forms.Form):
     """
     Форма для запроса сброса пароля по номеру телефона.

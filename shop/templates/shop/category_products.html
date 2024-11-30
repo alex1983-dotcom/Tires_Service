@@ -4,23 +4,68 @@
     <meta charset="UTF-8">
     <title>Товары в категории {{ category.name }}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'shop/css/category_products.css' %}">
+    <style>
+        #notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 1000; /* Добавляем z-index, чтобы уведомление отображалось поверх других элементов */
+        }
+    </style>
+    <script>
+        function showNotification(message) {
+            var notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.style.display = 'block';
+            setTimeout(function() {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function addToCart(event, form) {
+            event.preventDefault();
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", form.action, true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    showNotification("Товар добавлен в корзину");
+                }
+            };
+            xhr.send(new FormData(form));
+        }
+    </script>
 </head>
 <body>
     <h1>Товары в категории: {{ category.name }}</h1>
     <ul>
         {% for product in products %}
         <li>
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100" class="product-image">
+            {% else %}
+                <img src="{% static 'shop/images/no_image.png' %}" alt="Нет изображения" width="100" class="product-image">
+            {% endif %}
+            <h2>Арт. {{ product.sku }}</h2>
             <h2>{{ product.name }}</h2>
             <p>{{ product.description }}</p>
             <p>Цена: {{ product.price }} руб.</p>
-            <form action="{% url 'add-to-cart' product.id %}" method="post">
+            <form action="{% url 'add-to-cart' product.id %}" method="post" onsubmit="addToCart(event, this)">
                 {% csrf_token %}
                 <button type="submit">Добавить в корзину</button>
             </form>
         </li>
         {% endfor %}
     </ul>
+    <a href="{% url 'cart-detail' %}">Перейти в корзину</a>
+    <a href="{% url 'category-list' %}">Вернуться к категориям</a>
+    <div id="notification">Товар добавлен в корзину</div>
 </body>
 </html>
