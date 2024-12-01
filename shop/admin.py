@@ -11,7 +11,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ['user']
+    list_display = ['user__last_name', 'user__first_name', 'user']
 
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
