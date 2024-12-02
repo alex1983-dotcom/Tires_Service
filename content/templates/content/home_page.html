@@ -74,7 +74,7 @@
             border-radius: 100%;
             object-fit: cover;
         }
-        /* Стиль для ссылок регистрации и входа */
+        /* Стиль для ссылок регистрации, входа, форума, магазина */
         .register-link, .login-link, .forum-link, .shop-link {
             background-color: rgba(255, 255, 255, 0.7);
             color: black;
@@ -131,6 +131,7 @@
         {% endif %}
     </div>
     <div class="sidebar">
+        <h2>Блог ProffShina
         <h3>Рубрики</h3>
         <ul>
             <!-- Проходимся по всем категориям и создаем ссылки -->
@@ -156,14 +157,14 @@
     </div>
     <!-- Контейнер для ссылок на регистрацию и вход -->
     <div class="button-container">
-        <a href="{% url 'register' %}" class="register-link">Стать клиентом ProffShina</a>
+        <a href="{% url 'register' %}" class="register-link">Регистрация</a>
         {% if user.is_authenticated %}
-            <a href="{% url 'personal_cabinet' %}" class="login-link">Вход в личный кабинет</a>
+            <a href="{% url 'personal_cabinet' %}" class="login-link">Вход & Личный кабинет</a>
         {% else %}
-            <a href="{% url 'login' %}" class="login-link">Вход в личный кабинет</a>
+            <a href="{% url 'login' %}" class="login-link">Вход & Личный кабинет</a>
         {% endif %}
         <a href="{% url 'category_list' %}" class="forum-link">Перейти на форум</a> <!-- Новая кнопка для форума -->
-        <a href="{% url 'category-list' %}" class="shop-link">Перейти в магазин</a> <!-- Новая кнопка для магазина -->
+        <a href="{% url 'category-list' %}" class="shop-link">Магазин ProffShina</a> <!-- Новая кнопка для магазина -->
     </div>
 </body>
 </html>
