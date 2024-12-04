@@ -12,8 +12,9 @@ from dotenv import load_dotenv
 from django.utils.crypto import get_random_string
 from django.utils import timezone
 import os
-from .models import PasswordResetCode
+import hashlib
 import requests
+from .models import PasswordResetCode
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
@@ -201,6 +202,7 @@ class PasswordResetRequestView(View):
         form = PasswordResetRequestForm(request.POST)
         if form.is_valid():
             phone_number = form.cleaned_data['phone_number']
+
             # Генерируем код и отправляем SMS
             code = get_random_string(length=6, allowed_chars='0123456789')
             expiry_date = timezone.now() + timezone.timedelta(minutes=10)
@@ -212,33 +214,39 @@ class PasswordResetRequestView(View):
 
     def send_sms(self, phone_number, message):
         """
-        Функция для отправки SMS-сообщений с использованием API МТС.
+        Функция для отправки SMS-сообщений с использованием RocketSMS API.
 
         Args:
             phone_number (str): Номер телефона получателя.
             message (str): Текст сообщения.
         """
-        mts_api_url = 'https://api.mts.by/sms/send'  # заменить на реальный URL
-        account_sid = os.getenv('MTS_ACCOUNT_SID')
-        auth_token = os.getenv('MTS_AUTH_TOKEN')
+        rocketsms_login = os.getenv('ROCKSMS_LOGIN')
+        rocketsms_password = os.getenv('ROCKSMS_PASSWORD')
+        rocketsms_passhash = hashlib.md5(rocketsms_password.encode('utf-8')).hexdigest()
+        rocketsms_url = 'http://api.rocketsms.by/simple/send'
 
-        payload = {
-            'account_sid': account_sid,
-            'auth_token': auth_token,
-            'to': phone_number,
-            'body': message
-        }
-
-        headers = {
-            'Content-Type': 'application/json',
+        data = {
+            'username': rocketsms_login,
+            'password': rocketsms_passhash,
+            'phone': phone_number,
+            'text': message,
+            'priority': 'true'
         }
 
         try:
-            response = requests.post(mts_api_url, json=payload, headers=headers)
-            response.raise_for_status()  # Проверяем на наличие ошибок
-            print("SMS успешно отправлено")
-        except requests.exceptions.RequestException as e:
-            print(f"Ошибка при отправке SMS: {e}")
+            request = requests.post(rocketsms_url, data=data)
+            result = request.json()
+            status = result['status']
+        except Exception as e:
+            print('Cannot send SMS: bad or no response from RocketSMS.')
+            print(e)
+        else:
+            if status in ('SENT', 'QUEUED'):
+                print('SMS accepted, status: {}'.format(status))
+            else:
+                print('SMS rejected, status: {}'.format(status))
+
+
 
 
 class PasswordResetConfirmView(View):

@@ -4,6 +4,7 @@ from django.utils.crypto import get_random_string
 from dotenv import load_dotenv
 import os
 import requests
+import hashlib
 
 # Загружаем переменные окружения из файла .env
 load_dotenv()
@@ -27,8 +28,8 @@ class UserAdmin(admin.ModelAdmin):
             if not change:  # Только при создании нового пользователя
                 raw_password = get_random_string(length=8)
                 obj.set_password(raw_password)
-                obj.save()
-                self.send_sms(obj.phone_number, f"Ваш новый пароль: {raw_password}")
+                obj.save()  # Сначала сохраняем объект пользователя
+                self.send_sms(obj.phone_number, f"Ваш новый пароль: {raw_password}")  # Затем отправляем SMS
             else:
                 super().save_model(request, obj, form, change)
         except Exception as e:
@@ -36,31 +37,33 @@ class UserAdmin(admin.ModelAdmin):
 
     def send_sms(self, phone_number, message):
         """
-        Функция для отправки SMS-сообщений с использованием API МТС.
+        Функция для отправки SMS-сообщений с использованием RocketSMS API.
         """
-        mts_api_url = 'https://api.mts.by/sms/send'  # заменить на реальный URL
-        account_sid = os.getenv('MTS_ACCOUNT_SID')
-        auth_token = os.getenv('MTS_AUTH_TOKEN')
+        rocketsms_login = os.getenv('ROCKSMS_LOGIN')
+        rocketsms_password = os.getenv('ROCKSMS_PASSWORD')
+        rocketsms_passhash = hashlib.md5(rocketsms_password.encode('utf-8')).hexdigest()
+        rocketsms_url = 'http://api.rocketsms.by/simple/send'
 
-        payload = {
-            'account_sid': account_sid,
-            'auth_token': auth_token,
-            'to': phone_number,
-            'body': message
-        }
-
-        headers = {
-            'Content-Type': 'application/json',
+        data = {
+            'username': rocketsms_login,
+            'password': rocketsms_passhash,
+            'phone': phone_number,
+            'text': message,
+            'priority': 'true'
         }
 
         try:
-            response = requests.post(mts_api_url, json=payload, headers=headers)
-            if response.status_code == 200:
-                print("SMS успешно отправлено")
+            request = requests.post(rocketsms_url, data=data)
+            result = request.json()
+            status = result['status']
+        except Exception as e:
+            print('Cannot send SMS: bad or no response from RocketSMS.')
+            print(e)
+        else:
+            if status in ('SENT', 'QUEUED'):
+                print('SMS accepted, status: {}'.format(status))
             else:
-                print(f"Ошибка при отправке SMS: {response.status_code} - {response.text}")
-        except requests.RequestException as e:
-            print(f"Ошибка при отправке SMS: {e}")
+                print('SMS rejected, status: {}'.format(status))
 
 
 admin.site.register(User, UserAdmin)
@@ -152,5 +155,6 @@ class ServiceAppointmentAdmin(admin.ModelAdmin):
 
     user_full_name.short_description = 'Полное имя'
     user_phone_number.short_description = 'Номер телефона'
+
 
 admin.site.register(ServiceAppointment, ServiceAppointmentAdmin)
