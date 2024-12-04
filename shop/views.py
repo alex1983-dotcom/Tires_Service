@@ -12,11 +12,15 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse
 from django.http import JsonResponse
 
+
 class CategoryListView(View):
     """
     Представление для отображения списка категорий товаров.
     """
     def get(self, request):
+        """
+        Обрабатывает GET-запрос для отображения списка категорий.
+        """
         categories = Category.objects.all()
         return render(request, 'shop/category_list.html', {'categories': categories})
 
@@ -25,27 +29,44 @@ class CategoryProductsView(View):
     Представление для отображения списка товаров в категории.
     """
     def get(self, request, category_id):
+        """
+        Обрабатывает GET-запрос для отображения списка товаров в категории.
+        """
         category = get_object_or_404(Category, id=category_id)
         products = Product.objects.filter(category=category)
         return render(request, 'shop/category_products.html', {'category': category, 'products': products})
+
 
 class ProductListView(View):
     """
     Представление для отображения списка товаров.
     """
     def get(self, request):
+        """
+        Обрабатывает GET-запрос для отображения списка товаров.
+        """
         products = Product.objects.all()
         return render(request, 'shop/product_list.html', {'products': products})
 
+
 @method_decorator(login_required, name='dispatch')
 class CartDetailView(View):
+    """
+    Представление для отображения деталей корзины.
+    """
     def get(self, request):
+        """
+        Обрабатывает GET-запрос для отображения деталей корзины.
+        """
         cart = get_object_or_404(Cart, user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         total_price = sum(item.product.price * item.quantity for item in cart_items)
         return render(request, 'shop/cart_detail.html', {'cart': cart, 'cart_items': cart_items, 'total_price': total_price})
 
     def post(self, request):
+        """
+        Обрабатывает POST-запрос для обновления количества товаров в корзине.
+        """
         cart = get_object_or_404(Cart, user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         for item in cart_items:
@@ -59,7 +80,13 @@ class CartDetailView(View):
 
 @method_decorator(login_required, name='dispatch')
 class AddToCartView(View):
+    """
+    Представление для добавления товара в корзину.
+    """
     def post(self, request, product_id):
+        """
+        Обрабатывает POST-запрос для добавления товара в корзину.
+        """
         product = get_object_or_404(Product, id=product_id)
         cart, created = Cart.objects.get_or_create(user=request.user)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
@@ -68,7 +95,6 @@ class AddToCartView(View):
         else:
             cart_item.quantity += 1
         cart_item.save()
-        # Проверка, является ли запрос AJAX-запросом
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'message': 'Товар добавлен в корзину'})
         else:
@@ -77,9 +103,13 @@ class AddToCartView(View):
 
 @method_decorator(login_required, name='dispatch')
 class CheckoutView(View):
+    """
+    Представление для оформления заказа.
+    """
     def post(self, request):
-        print("POST data:", request.POST)  # Выводим данные формы для проверки
-
+        """
+        Обрабатывает POST-запрос для оформления заказа.
+        """
         cart = get_object_or_404(Cart, user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
 
@@ -120,9 +150,16 @@ class CheckoutView(View):
             print("Error processing order:", e)
             return render(request, 'shop/order_error.html', {'error': str(e)})
 
+
 @method_decorator(login_required, name='dispatch')
 class ClearCartView(View):
+    """
+    Представление для очистки корзины.
+    """
     def post(self, request):
+        """
+        Обрабатывает POST-запрос для очистки корзины.
+        """
         cart = get_object_or_404(Cart, user=request.user)
         CartItem.objects.filter(cart=cart).delete()
         return redirect('cart-detail')
@@ -133,6 +170,9 @@ class OrderSuccessView(View):
     Представление для отображения страницы успешного заказа.
     """
     def get(self, request, order_id):
+        """
+        Обрабатывает GET-запрос для отображения страницы успешного заказа.
+        """
         order = get_object_or_404(Order, id=order_id, user=request.user)
         return render(request, 'shop/order_success.html', {'order': order})
 
@@ -142,47 +182,68 @@ class CategoryList(APIView):
     Представление для получения списка всех категорий.
     """
     def get(self, request):
+        """
+        Обрабатывает GET-запрос для получения списка всех категорий.
+        """
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
     def post(self, request):
+        """
+        Обрабатывает POST-запрос для создания новой категории.
+        """
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ProductList(APIView):
     """
     Представление для получения списка всех товаров.
     """
     def get(self, request):
+        """
+        Обрабатывает GET-запрос для получения списка всех товаров.
+        """
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
     def post(self, request):
+        """
+        Обрабатывает POST-запрос для создания нового товара.
+        """
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class CartDetail(APIView):
     """
     Представление для получения деталей корзины текущего пользователя.
     """
     def get(self, request):
+        """
+        Обрабатывает GET-запрос для получения деталей корзины текущего пользователя.
+        """
         cart = get_object_or_404(Cart, user=request.user)
         serializer = CartSerializer(cart)
         return Response(serializer.data)
+
 
 class AddToCart(APIView):
     """
     Представление для добавления товара в корзину.
     """
     def post(self, request, product_id):
+        """
+        Обрабатывает POST-запрос для добавления товара в корзину.
+        """
         product = get_object_or_404(Product, id=product_id)
         cart, created = Cart.objects.get_or_create(user=request.user)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
@@ -192,6 +253,7 @@ class AddToCart(APIView):
             cart_item.quantity += 1
         cart_item.save()
         return Response({'status': 'added to cart'}, status=status.HTTP_200_OK)
+
 
 class Checkout(APIView):
     """

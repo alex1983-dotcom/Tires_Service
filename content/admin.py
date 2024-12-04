@@ -4,17 +4,34 @@ from .forms import DynamicArticleForm
 
 
 @admin.register(DynamicArticle)  # Используем декоратор для регистрации модели DynamicArticle в админке
-class DynamicArticleAdmin(admin.ModelAdmin):  # Определяем класс для админской панели модели DynamicArticle, наследуемся от admin.ModelAdmin
+class DynamicArticleAdmin(admin.ModelAdmin):
+    """
+    Класс для управления моделью DynamicArticle в административной панели.
+
+    Атрибуты:
+        form (DynamicArticleForm): Форма, используемая для создания и редактирования статей.
+        list_display (tuple): Поля, отображаемые в списке записей в административной панели.
+        search_fields (tuple): Поля, по которым можно выполнять поиск в административной панели.
+        list_filter (tuple): Поля, по которым можно фильтровать записи в административной панели.
+        fields (tuple): Поля, отображаемые в форме создания и редактирования записи.
+    """
     form = DynamicArticleForm
-    list_display = ('title', 'author', 'created_at', 'rubric')
-    search_fields = ('title', 'author', 'rubric__name')
-    list_filter = ('rubric', 'author', 'created_at')
-    fields = ('title', 'content', 'author', 'rubric', 'file')
+    list_display = ('title', 'author', 'created_at', 'rubric')  # Поля, отображаемые в списке записей в административной панели.
+    search_fields = ('title', 'author', 'rubric__name')  # Поля, по которым можно выполнять поиск в административной панели.
+    list_filter = ('rubric', 'author', 'created_at')  # Поля, по которым можно фильтровать записи в административной панели.
+    fields = ('title', 'content', 'author', 'rubric', 'file')  # Поля, отображаемые в форме создания и редактирования записи.
 
 
-@admin.register(HomePage)  # Используем декоратор для регистрации модели HomePage в админке
-class HomePageAdmin(admin.ModelAdmin):  # Определяем класс для админской панели модели HomePage, наследуемся от admin.ModelAdmin
-    list_display = ('title', 'address', 'phone', 'unp', 'legal_address')  # Указываем поля, которые будут отображаться в списке записей в админке
-    search_fields = ('title', 'address', 'phone', 'unp', 'legal_address')  # Задаем поля, по которым можно будет выполнять поиск в админке
+@admin.register(HomePage)
+class HomePageAdmin(admin.ModelAdmin):
+    """
+    Класс для управления моделью HomePage в административной панели.
+
+    Атрибуты:
+        list_display (tuple): Поля, отображаемые в списке записей в административной панели.
+        search_fields (tuple): Поля, по которым можно выполнять поиск в административной панели.
+    """
+    list_display = ('title', 'address', 'phone', 'unp', 'legal_address')  # Поля, отображаемые в списке записей в административной панели.
+    search_fields = ('title', 'address', 'phone', 'unp', 'legal_address')  # Поля, по которым можно выполнять поиск в административной панели.
 
 

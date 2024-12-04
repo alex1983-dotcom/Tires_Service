@@ -8,9 +8,26 @@ from django.db import IntegrityError
 
 
 class HomePageView(View):
+    """
+    Представление для отображения домашней страницы форума.
+
+    Атрибуты:
+        template_name (str): Имя шаблона, который будет использоваться для отображения домашней страницы.
+    """
     template_name = 'forum/home_page_forum.html'
 
     def get(self, request, *args, **kwargs):
+        """
+        Обрабатывает GET-запрос для отображения домашней страницы.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+            *args: Дополнительные позиционные аргументы.
+            **kwargs: Дополнительные именованные аргументы.
+
+        Returns:
+            HttpResponse: Ответ с шаблоном домашней страницы.
+        """
         try:
             return render(request, self.template_name)
         except Exception as e:
@@ -20,11 +37,25 @@ class HomePageView(View):
 
 
 class CategoryListView(LoginRequiredMixin, ListView):
+    """
+    Представление для отображения списка категорий.
+
+    Атрибуты:
+        model (Model): Модель, данные которой будут использоваться в представлении.
+        template_name (str): Имя шаблона, который будет использоваться для отображения списка категорий.
+        context_object_name (str): Имя переменной контекста, которая будет использоваться в шаблоне.
+    """
     model = Category
     template_name = 'forum/category_list.html'
     context_object_name = 'categories'
 
     def get_queryset(self):
+        """
+        Получает набор данных категорий.
+
+        Returns:
+            QuerySet: Набор данных категорий.
+        """
         try:
             return Category.objects.all()
         except Exception as e:
@@ -34,9 +65,27 @@ class CategoryListView(LoginRequiredMixin, ListView):
 
 
 class ThreadListView(LoginRequiredMixin, View):
+    """
+    Представление для отображения списка тем в определенной категории.
+
+    Атрибуты:
+        template_name (str): Имя шаблона, который будет использоваться для отображения списка тем.
+    """
     template_name = 'forum/thread_list.html'
 
     def get(self, request, category_id, *args, **kwargs):
+        """
+        Обрабатывает GET-запрос для отображения списка тем в категории.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+            category_id (int): Идентификатор категории.
+            *args: Дополнительные позиционные аргументы.
+            **kwargs: Дополнительные именованные аргументы.
+
+        Returns:
+            HttpResponse: Ответ с шаблоном списка тем.
+        """
         try:
             category = get_object_or_404(Category, id=category_id)
             threads = Thread.objects.filter(category=category)
@@ -53,9 +102,27 @@ class ThreadListView(LoginRequiredMixin, View):
 
 
 class PostListView(View):
+    """
+    Представление для отображения списка сообщений в теме.
+
+    Атрибуты:
+        template_name (str): Имя шаблона, который будет использоваться для отображения списка сообщений.
+    """
     template_name = 'forum/post_list.html'
 
     def get(self, request, thread_id, *args, **kwargs):
+        """
+        Обрабатывает GET-запрос для отображения списка сообщений в теме.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+            thread_id (int): Идентификатор темы.
+            *args: Дополнительные позиционные аргументы.
+            **kwargs: Дополнительные именованные аргументы.
+
+        Returns:
+            HttpResponse: Ответ с шаблоном списка сообщений.
+        """
         try:
             thread = get_object_or_404(Thread, id=thread_id)
             posts = Post.objects.filter(thread=thread)
@@ -71,6 +138,18 @@ class PostListView(View):
             return render(request, 'forum/error.html', {'error_message': 'Не удалось загрузить список сообщений'})
 
     def post(self, request, thread_id, *args, **kwargs):
+        """
+        Обрабатывает POST-запрос для создания нового сообщения в теме.
+
+        Args:
+            request (HttpRequest): Объект запроса.
+            thread_id (int): Идентификатор темы.
+            *args: Дополнительные позиционные аргументы.
+            **kwargs: Дополнительные именованные аргументы.
+
+        Returns:
+            HttpResponse: Перенаправление на список сообщений в теме или страница ошибки.
+        """
         try:
             thread = get_object_or_404(Thread, id=thread_id)
             content = request.POST.get('content')
@@ -94,4 +173,13 @@ class PostListView(View):
 
 
 def error_view(request):
+    """
+    Представление для отображения страницы ошибки.
+
+    Args:
+        request (HttpRequest): Объект запроса.
+
+    Returns:
+        HttpResponse: Ответ с шаблоном страницы ошибки.
+    """
     return render(request, 'forum/error.html', {'error_message': 'Произошла ошибка'})
