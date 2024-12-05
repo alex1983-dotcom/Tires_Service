@@ -164,6 +164,7 @@ CACHES = {
     }
 }
 
+
 LOGIN_REDIRECT_URL = 'home_page'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -172,6 +173,7 @@ AUTH_USER_MODEL = 'user_registration.User'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
 
 
 LOGGING = {
@@ -201,6 +203,7 @@ LOGGING = {
 # Консольный почтовый бэкенд для разработки
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+
 
 # Настройка Django REST Framework.
 REST_FRAMEWORK = {
