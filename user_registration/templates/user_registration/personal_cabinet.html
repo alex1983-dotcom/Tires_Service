@@ -112,8 +112,9 @@
             text-decoration: none;
             font-weight: bold;
             margin-bottom: 10px; /* Уменьшено значение для плотности */
-            display: block;
-            text-align: center;
+            display: inline-block;
+            text-align: center;  /* Выравниваем текст по центру */
+            width: 140px;  /* Задаем фиксированную ширину */
         }
 
             background: red;
@@ -150,10 +151,11 @@
     {% if appointments %}
         {% for appointment in appointments|slice:":2" %}
             <li>
+                Клиент: {{ appointment.user }}<br>
                 Модель автомобиля: {{ appointment.car_model }}<br>
                 Дата обслуживания: {{ appointment.service_date }}<br>
                 Время обслуживания: {{ appointment.service_time }}<br>
-                Заключение по результатам проверки: {{ appointment.additional_info|default:"Нет" }}
+                Заключение по результатам проверки:<br> {{ appointment.additional_info|default:"Нет" }}
             </li>
         {% endfor %}
     {% else %}
@@ -163,7 +165,9 @@
         <h3>Информация о хранении шин</h3>
         <ul>
             {% for storage in tire_storages %}
-                <li>Дата поступления: {{ storage.entry_date }} - Дата выдачи: {{ storage.exit_date }} - Стоимость хранения: {{ storage.calculate_storage_cost }}р</li>
+                <li>Дата поступления: {{ storage.entry_date }}</li>
+                <li>Дата выдачи: {{ storage.exit_date }}</li>
+                <li>Стоимость хранения: {{ storage.calculate_storage_cost }}р.</li>
                 <li>Модель шины: {{ storage.tire_model }}</li>
                 <li>Размер шины: {{ storage.tire_size }}</li>
                 <li>Количество шин: {{ storage.quantity }}</li>

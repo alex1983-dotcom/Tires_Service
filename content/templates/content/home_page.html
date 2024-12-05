@@ -19,7 +19,7 @@
         }
         /* Стиль для заголовков */
         h1, h2, h3 {
-            line-height: 1.8;
+            line-height: 1.5;
         }
         /* Стиль для параграфов */
         p {
@@ -59,10 +59,10 @@
         /* Стиль для содержимого */
         .content {
             width: 20%;
-            margin: 5px auto;
+            margin: 10px auto;
             color: white;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 10px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 1);
             overflow: hidden;
@@ -83,11 +83,12 @@
             text-decoration: none;
             font-weight: bold;
             margin-bottom: 10px;  /* Добавляем отступ снизу */
-            display: block;  /* Делаем элемент блочным, чтобы они были в столбик */
+            display: inline-block;  /* Делаем элемент блочным */
             text-align: center;  /* Выравниваем текст по центру */
+            width: 180px;  /* Задаем фиксированную ширину */
         }
         /* Стиль для ссылок при наведении */
-        .register-link:hover, .login-link:hover, .forum-link:hover {
+        .register-link:hover, .login-link:hover, .forum-link:hover, .shop-link:hover {
             background-color: rgba(255, 255, 255, 1);
         }
         /* Стиль для контейнера кнопок */
@@ -111,14 +112,20 @@
             cursor: default;
             font-size: 10px;
         }
+
         /* Стиль для дополнительной информации */
         .additional-info {
-            font-style: italic;  /* Наклонный шрифт */
-            color: lightgray;  /* Светло-серый цвет текста для большего контраста */
+        font-style: italic;  /* Наклонный шрифт */
+        color: lightgray;  /* Светло-серый цвет */
+        font-weight: bold;  /* Жирный шрифт */
         }
+
+
         /* Стиль для основного содержимого */
         .main-content {
-            font-style: italic;  /* Наклонный шрифт */
+        font-style: italic;  /* Наклонный шрифт */
+        color: lightgray;  /* Светло-серый цвет */
+        font-weight: bold;  /* Жирный шрифт */
         }
     </style>
 </head>
