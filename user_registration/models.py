@@ -202,6 +202,7 @@ class PasswordResetCode(models.Model):
     phone_number = models.CharField(max_length=15)  # Номер телефона пользователя
     code = models.CharField(max_length=6)  # Код сброса пароля
     expiry_date = models.DateTimeField()  # Срок действия кода
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def is_valid(self):
         """

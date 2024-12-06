@@ -21,6 +21,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import login, authenticate
+from datetime import timedelta
 
 # Переменные окружения из файла .env
 load_dotenv()
@@ -203,10 +204,22 @@ class PasswordResetRequestView(View):
         if form.is_valid():
             phone_number = form.cleaned_data['phone_number']
 
+            # Проверяем количество запросов за последние 24 часа
+            now = timezone.now()
+            past_24_hours = now - timedelta(hours=24)
+            requests_count = PasswordResetCode.objects.filter(
+                phone_number=phone_number,
+                created_at__gte=past_24_hours
+            ).count()
+
+            if requests_count >= 2:
+                messages.error(request, 'Вы уже запросили сброс пароля дважды за последние 24 часа. Повторите попытку позже.')
+                return redirect('password_reset_request')
+
             # Генерируем код и отправляем SMS
             code = get_random_string(length=6, allowed_chars='0123456789')
-            expiry_date = timezone.now() + timezone.timedelta(minutes=10)
-            PasswordResetCode.objects.create(phone_number=phone_number, code=code, expiry_date=expiry_date)
+            expiry_date = now + timedelta(minutes=10)
+            PasswordResetCode.objects.create(phone_number=phone_number, code=code, expiry_date=expiry_date, created_at=now)
             self.send_sms(phone_number, f"Ваш код для сброса пароля: {code}")
             messages.success(request, 'Код для сброса пароля отправлен на ваш номер телефона.')
             return redirect('password_reset_confirm')
@@ -234,8 +247,8 @@ class PasswordResetRequestView(View):
         }
 
         try:
-            request = requests.post(rocketsms_url, data=data)
-            result = request.json()
+            response = requests.post(rocketsms_url, data=data)
+            result = response.json()
             status = result['status']
         except Exception as e:
             print('Cannot send SMS: bad or no response from RocketSMS.')
@@ -245,7 +258,6 @@ class PasswordResetRequestView(View):
                 print('SMS accepted, status: {}'.format(status))
             else:
                 print('SMS rejected, status: {}'.format(status))
-
 
 
 
