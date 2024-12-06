@@ -4,7 +4,8 @@ from django.utils.crypto import get_random_string
 from dotenv import load_dotenv
 import os
 import requests
-import hashlib
+from django.utils import timezone
+import base64
 
 # Загружаем переменные окружения из файла .env
 load_dotenv()
@@ -37,36 +38,53 @@ class UserAdmin(admin.ModelAdmin):
 
     def send_sms(self, phone_number, message):
         """
-        Функция для отправки SMS-сообщений с использованием RocketSMS API.
+        Функция для отправки SMS-сообщений с использованием МТС API.
         """
-        rocketsms_login = os.getenv('ROCKSMS_LOGIN')
-        rocketsms_password = os.getenv('ROCKSMS_PASSWORD')
-        rocketsms_passhash = hashlib.md5(rocketsms_password.encode('utf-8')).hexdigest()
-        rocketsms_url = 'http://api.rocketsms.by/simple/send'
+        mts_sms_login = os.getenv('MTS_LOGIN')
+        mts_sms_password = os.getenv('MTS_PASSWORD')
+        mts_sms_client_id = os.getenv('MTS_CLIENT_ID')
+        mts_sms_url = f'https://api.communicator.mts.by/{mts_sms_client_id}/json2/simple'
+
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + base64.b64encode(f"{mts_sms_login}:{mts_sms_password}".encode()).decode()
+        }
+
+        # Форматируем start_time в соответствии с требованиями
+        start_time = timezone.now().strftime("%Y-%m-%d %H:%M:%S%z")
+        start_time = start_time[:-2] + ':' + start_time[-2:]  # Добавляем двоеточие в часовую зону
 
         data = {
-            'username': rocketsms_login,
-            'password': rocketsms_passhash,
-            'phone': phone_number,
-            'text': message,
-            'priority': 'true'
+            'phone_number': phone_number,
+            'extra_id': "AD-6640-7006",  # Пример значения, вы можете его изменить
+            'callback_url': "https://api.communicator.mts.by/sms/callback",
+            'start_time': start_time,
+            'tag': "Password reset",
+            'channels': ["sms"],
+            'channel_options': {
+                'sms': {
+                    'text': message,
+                    'ttl': 300  # Убираем alpha_name
+                }
+            }
         }
 
         try:
-            request = requests.post(rocketsms_url, data=data)
-            result = request.json()
-            status = result['status']
-        except Exception as e:
-            print('Cannot send SMS: bad or no response from RocketSMS.')
-            print(e)
-        else:
+            response = requests.post(mts_sms_url, headers=headers, json=data, timeout=60)
+            result = response.json()
+            print('Response from MTS API:', result)
+            status = result.get('status', 'unknown')
+
             if status in ('SENT', 'QUEUED'):
                 print('SMS accepted, status: {}'.format(status))
             else:
                 print('SMS rejected, status: {}'.format(status))
-
+        except Exception as e:
+            print('Cannot send SMS: bad or no response from MTS API.')
+            print(e)
 
 admin.site.register(User, UserAdmin)
+
 
 
 class DiscountAdmin(admin.ModelAdmin):
