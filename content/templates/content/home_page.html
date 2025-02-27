@@ -8,7 +8,7 @@
         body {
             font-family: "Times New Roman", Times, serif;
             line-height: 1.2;
-            background-image: url('{{ MEDIA_URL }}колесо.jpg');
+            background-image: url('{{ MEDIA_URL }}шины.jpg');
             background-size: cover;
             color: white;
             margin: 0;
@@ -100,6 +100,7 @@
             flex-direction: column;  /* Делаем расположение кнопок в столбик */
             align-items: flex-end;  /* Выравниваем кнопки справа */
         }
+        
         .status-button {
             background: {{ user.is_authenticated|yesno:"green,red" }};
             color: white;
@@ -116,7 +117,7 @@
         /* Стиль для дополнительной информации */
         .additional-info {
         font-style: italic;  /* Наклонный шрифт */
-        color: lightgray;  /* Светло-серый цвет */
+        color: rgb(205, 203, 203);  /* Светло-серый цвет */
         font-weight: bold;  /* Жирный шрифт */
         }
 
@@ -138,7 +139,7 @@
         {% endif %}
     </div>
     <div class="sidebar">
-        <h2>Блог ProffShina</h2>
+        <h2>Blog ProffShina</h2>
         <h3>Рубрики</h3>
         <ul>
             <!-- Проходимся по всем категориям и создаем ссылки -->
@@ -149,7 +150,7 @@
     </div>
     <div class="content" style="text-align: center;">
         <!-- Логотип компании -->
-        <img class="logo" src="{{ MEDIA_URL }}логотип.jpg" alt="Логотип" style="width: 60%; height: auto;">
+        <img class="logo" src="{{ MEDIA_URL }}логотип.jpg" alt="Логотип" style="width: 70%; height: auto;">
         <!-- Заголовок страницы -->
         <h1 style="font-family: 'Palace Script MT', cursive; font-size: 100px;">{{ home_page.title }}</h1>
         <!-- Основное содержимое страницы -->
